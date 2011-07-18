@@ -17,7 +17,7 @@ package com.zambi.service
 			super(target);
 		}
 		
-		public function search(zip:String = "32792"):void
+		public function search(zip:String = "32707"):void
 		{
 			var uVars:URLVariables = new URLVariables();
 			uVars.apicode = API_KEY;
@@ -30,20 +30,24 @@ package com.zambi.service
 			var uLoader:URLLoader = new URLLoader();
 			uLoader.addEventListener(Event.COMPLETE, onSearchComplete);
 			uLoader.load(uReq);
-			
 		}
 		
 		private function onSearchComplete(e:Event):void
 		{
+			var nameSpace:Namespace = new Namespace();
+			
 			trace(e.currentTarget);
 			var uLoader:URLLoader = e.currentTarget as URLLoader;
 			
 			var data:XML = XML(uLoader.data);
 			
-			for each(var p:XML in data.aws:weather)
-			{
-				trace(p.aws.locations);
-			}
+			
+//			for each(var p:XML in data.)
+//			{
+//				
+//			}
+			
+			
 		}
 	}
 }
