@@ -24,10 +24,14 @@
           <libraryPathEntry kind="3" linkType="1" path="${PROJECT_FRAMEWORKS}/libs/automation_agent.swc" useDefaultLinkType="false"/>
         </excludedEntries>
       </libraryPathEntry>
+      <libraryPathEntry kind="1" linkType="1" path="libs"/>
     </libraryPath>
     <sourceAttachmentPath/>
   </compiler>
-  <applications/>
+  <applications>
+    <application path="TwitterPlugin.as"/>
+    <application path="com/ramirez/events/TwitServiceEvent.as"/>
+  </applications>
   <modules/>
   <buildCSSFiles/>
 </actionScriptProperties>

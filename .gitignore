@@ -1,7 +1,7 @@
 Application/bin-debug/FlashBoard.swf
-/.actionScriptProperties
+*/.actionScriptProperties/
 /.project
 /.settings/
-TwitterPlugin/.actionScriptProperties
-TwitterPlugin/.project
-TwitterPlugin/.settings/
+/.metadata
+*/bin-debug
+
