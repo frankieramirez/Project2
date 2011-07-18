@@ -38,9 +38,10 @@ package com.ramirez.ui
 				{
 					var dv:DetailView = new DetailView(vo.name,vo.tweet,vo.img_url,vo.timeCreated);
 					this.addChild(dv);
-					dv.y = (dv.height) * i;
-					i++;
+					dv.y = 160 + (dv.height + 20) * i;
+					dv.x = 100;
 				}
+				i++;
 			}
 			
 		}
@@ -48,6 +49,7 @@ package com.ramirez.ui
 		private function onLoad(e:Event):void
 		{
 			this.imgBase.addChild(e.currentTarget.content);
+			e.currentTarget.content.scaleX = e.currentTarget.content.scaleY = 1.5;
 		}
 	}
 }
