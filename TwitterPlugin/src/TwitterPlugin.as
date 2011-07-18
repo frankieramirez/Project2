@@ -6,12 +6,12 @@ package
 	import flash.display.Sprite;
 	
 	[SWF(width="1080", height="800")]
-	public class TwitterPlugin extends Sprite
+	public class TwitterPlugin extends Sprite 
 	{
 		public function TwitterPlugin()
 		{
 			initialize("drsalvan");
-		}
+		} 
 		
 		public function connect():void
 		{
