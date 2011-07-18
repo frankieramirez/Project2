@@ -1,5 +1,6 @@
 package
 {
+	import com.ramirez.events.TwitServiceEvent;
 	import com.ramirez.services.TwitService;
 	import com.ramirez.ui.TweetPanel;
 	
@@ -13,13 +14,14 @@ package
 			initialize("drsalvan");
 		} 
 		
-		public function connect():void
+		public function connect(e:TwitServiceEvent):void
 		{
-			var tPanel:TweetPanel = new TweetPanel();
+			var tPanel:TweetPanel = new TweetPanel(e.data);
 			this.addChild(tPanel);
+			tPanel.addDetail();
 		}
 		
-		public function disconnect():void
+		public function disconnect():void 
 		{
 			//this.removeChild(tPanel);
 		}
@@ -28,7 +30,7 @@ package
 		{	
 			var tsvc:TwitService = new TwitService();
 			tsvc.search(keyword);
-			connect();
+			tsvc.addEventListener(TwitServiceEvent.DATA_LOADED, connect);
 		}
 	}
 }

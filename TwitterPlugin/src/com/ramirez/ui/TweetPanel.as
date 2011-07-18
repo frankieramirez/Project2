@@ -3,26 +3,36 @@ package com.ramirez.ui
 	import com.ramirez.events.TwitServiceEvent;
 	import com.ramirez.vo.InfoVO;
 	
+	import flash.display.Loader;
+	import flash.events.Event;
+	import flash.net.URLRequest;
+	
 	import libs.TweetPanelBase;
 	
 	public class TweetPanel extends TweetPanelBase
 	{
-		public function TweetPanel()
+		private var _data:Array;
+		
+		public function TweetPanel(data:Array)
 		{
 			super();
-			
-			this.addEventListener(TwitServiceEvent.DATA_LOADED, onDataLoaded);
+			_data = data;			
 		}
 		
-		private function onDataLoaded(e:TwitServiceEvent):void
+		public function addDetail():void
 		{
 			var i:int = 0;
 			
-			for each(var vo:InfoVO in e.data)
+			for each(var vo:InfoVO in _data)
 			{
 				if(i == 0)
 				{
 					this.tfUsername.text = vo.name;
+					this.tfTweet.text = vo.tweet;
+					this.tfTime.text = vo.timeCreated;
+					var ld:Loader = new Loader();
+					ld.load(new URLRequest(vo.img_url));
+					ld.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoad);
 				}
 				else
 				{
@@ -32,6 +42,12 @@ package com.ramirez.ui
 					i++;
 				}
 			}
+			
+		}
+		
+		private function onLoad(e:Event):void
+		{
+			this.imgBase.addChild(e.currentTarget.content);
 		}
 	}
 }

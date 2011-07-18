@@ -11,7 +11,7 @@ package com.ramirez.services
 	import flash.net.URLRequest;
 	
 	import json.JSON;
-	
+	[Event(type="com.ramirez.events.TwitServiceEvent",name="dataLoaded")]
 	public class TwitService extends EventDispatcher
 	{
 		public function TwitService(target:IEventDispatcher=null)
@@ -45,7 +45,7 @@ package com.ramirez.services
 			var i:int = 0;
 			for each(var o:Object in data.results)
 			{
-				if (i<7) 
+				if (i<5) 
 				{
 					var iVo:InfoVO = new InfoVO();
 					iVo.name = o.from_user;
