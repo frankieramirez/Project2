@@ -50,7 +50,8 @@ package com.ramirez.services
 					var iVo:InfoVO = new InfoVO();
 					iVo.name = o.from_user;
 					iVo.img_url = o.profile_image_url;
-					iVo.results = o.text;
+					iVo.tweet = o.text;
+					iVo.timeCreated = o.created_at;
 					
 					returnArray.push(iVo);
 					i++;
