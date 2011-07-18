@@ -11,7 +11,7 @@ package
 	{
 		public function TwitterPlugin()
 		{
-			initialize("drsalvan");
+			initialize("DraStudio");
 		} 
 		
 		public function connect(e:TwitServiceEvent):void
