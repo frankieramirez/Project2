@@ -1,16 +1,18 @@
 package
 {
+	import com.events.NewsServiceEvent;
 	import com.services.NewsService;
+	import com.views.NewsView;
 	
 	import flash.display.Sprite;
 	
 	public class NewsPlugin extends Sprite
 	{
+		private var _newsVw:NewsView;
+		
 		public function NewsPlugin()
 		{
-			//TODO Create the views
-			//TODO activate the service class
-			//TODO Listen for the service class complete
+			init();
 		}
 		
 		public function connect():void
@@ -25,7 +27,18 @@ package
 		
 		public function init():void
 		{
+			_newsVw = new NewsView();
+			addChild(_newsVw);
 			
+			var url:String = "http://hosted.ap.org/lineups/TOPHEADS-rss_2.0.xml?SITE=WYCHE&SECTION=HOME";
+			var ns:NewsService = new NewsService();
+			ns.addEventListener(NewsServiceEvent.NEWS_FOUND, onNewsFound);
+			ns.load(url);
+		}
+		
+		private function onNewsFound(e:NewsServiceEvent):void
+		{
+			_newsVw.newsEvents = e.newsEvents;
 		}
 		
 	}
