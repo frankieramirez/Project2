@@ -4,7 +4,6 @@ package com.Zambie.FlashBoard.Interfaces
 	{
 		
 		function init(xmlData:XML):void;
-		function connect():void;
 		
 	}
 }
