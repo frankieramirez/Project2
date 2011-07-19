@@ -14,6 +14,8 @@ package
 		private var _setupMenu:ConfigurationDBox;
 		private var _xmlFilePath:String;
 		private var _xmlReloadDuration:uint;
+		private var _xmlData:XML;
+		private var _defaultSlideTime:uint;
 		
 		public function FlashBoard()
 		{
@@ -35,7 +37,18 @@ package
 		
 		private function onConfigurationComplete(e:Event):void {
 			
+			_xmlFilePath = _setupMenu.filePath;
+			_xmlReloadDuration = _setupMenu.reloadDuration;
 			
+			if (_xmlReloadDuration) {
+				
+				loadXML();
+				
+			} else {
+				
+				_setupMenu.throwError("Please enter duration.");
+				
+			}
 			
 		}
 		
@@ -54,13 +67,25 @@ package
 		
 		private function loadXML():void {
 			
+			var file:File = new File(_xmlFilePath);
+			file.load();
+			file.addEventListener(Event.COMPLETE, onXMLLoad);
+			
 			
 			
 		}
 		
 		private function onXMLLoad(e:Event):void {
 			
+			_xmlData = XML(e.currentTarget.data);
+			configureDashboard();
 			
+		}
+		
+		private function configureDashboard():void {
+			
+			_defaultSlideTime = _xmlData.configuration.slides.time;
+			trace(_defaultSlideTime);
 			
 		}
 		

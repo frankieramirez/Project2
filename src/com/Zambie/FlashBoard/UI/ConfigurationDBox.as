@@ -5,6 +5,8 @@ package com.Zambie.FlashBoard.UI
 	import flash.filesystem.File;
 	import flash.net.FileFilter;
 	import flash.net.FileReference;
+	import flash.text.TextField;
+	import flash.text.TextFormat;
 	
 	import libs.ConfigDialogBoxBase;
 	
@@ -24,12 +26,12 @@ package com.Zambie.FlashBoard.UI
 		
 		public function initUI():void {
 			
-			this.file_btn.mouseChildren = false;
+			
 			this.file_btn.buttonMode = true;
 			this.file_btn.addEventListener(MouseEvent.CLICK, onFileBrowse);
 			
 			
-			this.start_btn.mouseChildren = false;
+			
 			this.start_btn.buttonMode = true;
 			this.start_btn.addEventListener(MouseEvent.CLICK, onStart);
 			
@@ -60,9 +62,22 @@ package com.Zambie.FlashBoard.UI
 				
 			} else {
 				
-				
+				trace("wong");
 			
 			}
+			
+		}
+		
+		public function throwError(str:String):void {
+			
+			var tf:TextField = new TextField();
+			var tfFormat:TextFormat = new TextFormat();
+			tfFormat.color = 0xff0000;
+			tfFormat.size = 30;
+			tf.text = str;
+			this.addChild(tf);
+			tf.x = this.width/2;
+			tf.y = this.height/2;
 			
 		}
 		
