@@ -1,16 +1,19 @@
 package
 {
+	import com.Zambie.FlashBoard.UI.ConfigurationDBox;
+	
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.filesystem.File;
 	import flash.net.FileFilter;
 	
-	import libs.ConfigDialogBoxBase;
 	
 	public class FlashBoard extends Sprite
 	{
 		
-		private var _setupMenu:ConfigDialogBoxBase;
+		private var _setupMenu:ConfigurationDBox;
+		private var _xmlFilePath:String;
+		private var _xmlReloadDuration:uint;
 		
 		public function FlashBoard()
 		{
@@ -20,6 +23,17 @@ package
 		}
 		
 		private function startUpUI():void {
+			
+			_setupMenu = new ConfigurationDBox();
+			_setupMenu.addEventListener(ConfigurationDBox.CONFIGURATION_COMPLETE, onConfigurationComplete);
+			this.addChild(_setupMenu);
+			_setupMenu.x = this.stage.stageWidth/2;
+			_setupMenu.y = this.stage.stageHeight/2;
+			_setupMenu.initUI();
+			
+		}
+		
+		private function onConfigurationComplete(e:Event):void {
 			
 			
 			
