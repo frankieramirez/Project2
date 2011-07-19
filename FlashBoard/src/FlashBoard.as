@@ -1,13 +1,18 @@
 package
 {
+	import com.Zambie.FlashBoard.Interfaces.IPlugin;
 	import com.Zambie.FlashBoard.UI.ConfigurationDBox;
+	import com.Zambie.FlashBoard.Wrapper;
 	
+	import flash.display.Loader;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode;
 	import flash.filesystem.FileStream;
 	import flash.net.FileFilter;
+	import flash.net.URLRequest;
+	import flash.utils.ByteArray;
 	
 	
 	public class FlashBoard extends Sprite
@@ -78,6 +83,7 @@ package
 			var str:String = fs.readUTFBytes(fs.bytesAvailable);
 			//file.addEventListener(Event.COMPLETE, onXMLLoad);
 			_xmlData = XML(str);
+			fs.close();
 			//trace(_xmlData);
 			configureDashboard();
 			
@@ -105,12 +111,28 @@ package
 		
 		private function configurePlugins():void {
 			
-			for each(var plugin:XML in _xmlData.plugins.plugin) {
+			
+			for each (var pluginNode:XML in _xmlData.plugins.plugin) {
 				
+				var file:File = new File(String(_xmlData.plugins.@directory) + "/" + pluginNode.filename);
+				trace(file.nativePath);
+				var fs:FileStream = new FileStream();
+				fs.open(file, FileMode.READ);
+				var ba:ByteArray = new ByteArray();
 				
+				fs.readBytes(ba,0,fs.bytesAvailable);
+				
+				var l:Loader = new Loader();
+				addChild(l);
+				l.load(new URLRequest("file://" + file.nativePath));
 				
 			}
 			
+		}
+		
+		private function onComplete(e:Event):void
+		{
+			trace('GOT IT!');
 		}
 		
 		private function updatePlugins():void {
