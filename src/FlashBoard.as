@@ -5,8 +5,13 @@ package
 	import flash.filesystem.File;
 	import flash.net.FileFilter;
 	
+	import libs.ConfigDialogBoxBase;
+	
 	public class FlashBoard extends Sprite
 	{
+		
+		private var _setupMenu:ConfigDialogBoxBase;
+		
 		public function FlashBoard()
 		{
 			
