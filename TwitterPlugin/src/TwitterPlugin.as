@@ -19,18 +19,14 @@ package
 		{	
 			var tsvc:TwitService = new TwitService();
 			tsvc.search(xmlData.text());
+			tsvc.addEventListener(TwitServiceEvent.DATA_LOADED,onDataLoaded);
 		}
 		
-		public function connect(e:TwitServiceEvent):void
+		public function onDataLoaded(e:TwitServiceEvent):void
 		{
 			_tPanel = new TweetPanel(e.data);
 			this.addChild(_tPanel);
 			_tPanel.addDetail();
-		}
-		
-		public function disconnect():void 
-		{
-			this.removeChild(_tPanel);
 		}
 		
 	}
