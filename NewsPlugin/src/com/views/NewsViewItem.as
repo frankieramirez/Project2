@@ -1,17 +1,39 @@
 package com.views
 {
+	import com.VO.NewsVO;
+	
 	import flash.display.Sprite;
+	import flash.text.TextField;
+	import flash.text.TextFieldAutoSize;
 	
 	public class NewsViewItem extends Sprite
 	{
-		public function NewsViewItem()
+		private var _news:NewsVO;
+		private var _tf:TextField;
+		
+		public function NewsViewItem(news:NewsVO)
 		{
 			super();
 			
-			//TODO private var for the individual VO given
-			//TODO display the information given
-			//TODO create a setter for the var so that the information can be changed
+			_news = news;
+
+			_tf = new TextField();
+			_tf.autoSize = TextFieldAutoSize.LEFT;
+			_tf.width = 200;
+			addChild(_tf);
+			update();
 			//TODO find out if this item is the first, and if so change it to the next frame
 		}
+		
+		private function update():void
+		{
+			_tf.text = _news.title;
+		}
+		
+		public function set news(value:NewsVO):void
+		{
+			_news = value;
+		}
+
 	}
 }
