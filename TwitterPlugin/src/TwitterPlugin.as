@@ -6,30 +6,32 @@ package
 	
 	import flash.display.Sprite;
 	
-	[SWF(width="1080", height="800")]
+	[SWF(width="1024", height="768")]
 	public class TwitterPlugin extends Sprite 
 	{
+		private var _tPanel:TweetPanel;
+		
 		public function TwitterPlugin()
 		{
 		} 
-		
-		public function connect(e:TwitServiceEvent):void
-		{
-			var tPanel:TweetPanel = new TweetPanel(e.data);
-			this.addChild(tPanel);
-			tPanel.addDetail();
-		}
-		
-		public function disconnect():void 
-		{
-			//this.removeChild(tPanel);
-		}
 		
 		public function initialize(xmlData:XML):void
 		{	
 			var tsvc:TwitService = new TwitService();
 			tsvc.search(xmlData.text());
-			tsvc.addEventListener(TwitServiceEvent.DATA_LOADED, connect);
 		}
+		
+		public function connect(e:TwitServiceEvent):void
+		{
+			_tPanel = new TweetPanel(e.data);
+			this.addChild(_tPanel);
+			_tPanel.addDetail();
+		}
+		
+		public function disconnect():void 
+		{
+			this.removeChild(_tPanel);
+		}
+		
 	}
 }
