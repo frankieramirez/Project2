@@ -5,6 +5,8 @@ package
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.filesystem.File;
+	import flash.filesystem.FileMode;
+	import flash.filesystem.FileStream;
 	import flash.net.FileFilter;
 	
 	
@@ -68,17 +70,18 @@ package
 		private function loadXML():void {
 			
 			var file:File = new File(_xmlFilePath);
-			file.load();
-			file.addEventListener(Event.COMPLETE, onXMLLoad);
+			trace(_xmlFilePath);
+			//file.load();
 			
-			
-			
-		}
-		
-		private function onXMLLoad(e:Event):void {
-			
-			_xmlData = XML(e.currentTarget.data);
+			var fs:FileStream = new FileStream();
+			fs.open(file,FileMode.READ);
+			var str:String = fs.readUTFBytes(fs.bytesAvailable);
+			trace("XML STRING:",str);
+			//file.addEventListener(Event.COMPLETE, onXMLLoad);
+			_xmlData = XML(str);
+			//trace(_xmlData);
 			configureDashboard();
+			
 			
 		}
 		
