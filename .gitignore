@@ -5,3 +5,18 @@ Application/bin-debug/FlashBoard.swf
 /.metadata
 */bin-debug/
 
+
+NewsPlugin/html-template/swfobject.js
+CalendarPlugin/.settings/org.eclipse.core.resources.prefs
+CalendarPlugin/html-template/playerProductInstall.swf
+NewsPlugin/html-template/playerProductInstall.swf
+NewsPlugin/.settings/org.eclipse.core.resources.prefs
+CalendarPlugin/html-template/
+NewsPlugin/html-template/index.template.html
+NewsPlugin/html-template/history/historyFrame.html
+NewsPlugin/html-template/history/history.js
+NewsPlugin/html-template/history/history.css
+CalendarPlugin/.project
+CalendarPlugin/.actionScriptProperties
+NewsPlugin/.actionScriptProperties
+NewsPlugin/.project
