@@ -4,6 +4,9 @@ FlashBoard/bin-debug/FlashBoard.swf
 /.settings/
 /.metadata
 */bin-debug/
+<<<<<<< HEAD
+*/libs/*.swf
+=======
 */libs/*.swf
 FlashBoard.swf
 
@@ -22,3 +25,4 @@ CalendarPlugin/.project
 CalendarPlugin/.actionScriptProperties
 NewsPlugin/.actionScriptProperties
 NewsPlugin/.project
+>>>>>>> d84ce5e0f9b75a5cb8b0101258456930fc9e8510
