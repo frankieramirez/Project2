@@ -5,6 +5,7 @@ FlashBoard/bin-debug/FlashBoard.swf
 /.metadata
 */bin-debug/
 */libs/*.swf
+FlashBoard.swf
 
 
 NewsPlugin/html-template/swfobject.js

@@ -76,7 +76,6 @@ package
 			var fs:FileStream = new FileStream();
 			fs.open(file,FileMode.READ);
 			var str:String = fs.readUTFBytes(fs.bytesAvailable);
-			trace("XML STRING:",str);
 			//file.addEventListener(Event.COMPLETE, onXMLLoad);
 			_xmlData = XML(str);
 			//trace(_xmlData);
@@ -88,13 +87,29 @@ package
 		private function configureDashboard():void {
 			
 			_defaultSlideTime = _xmlData.configuration.slides.time;
-			trace(_defaultSlideTime);
+			
+			//Settup & configure plug-ins
+			configurePlugins();
+			
+			//TODO: Settup & configure timers
+			
+			
 			
 		}
 		
 		private function updateSlides():void {
 			
 			
+			
+		}
+		
+		private function configurePlugins():void {
+			
+			for each(var plugin:XML in _xmlData.plugins.plugin) {
+				
+				
+				
+			}
 			
 		}
 		
