@@ -11,7 +11,6 @@ package
 	{
 		public function TwitterPlugin()
 		{
-			initialize("DraStudio");
 		} 
 		
 		public function connect(e:TwitServiceEvent):void
@@ -26,10 +25,10 @@ package
 			//this.removeChild(tPanel);
 		}
 		
-		public function initialize(keyword:String):void
+		public function initialize(xmlData:XML):void
 		{	
 			var tsvc:TwitService = new TwitService();
-			tsvc.search(keyword);
+			tsvc.search(xmlData.text());
 			tsvc.addEventListener(TwitServiceEvent.DATA_LOADED, connect);
 		}
 	}

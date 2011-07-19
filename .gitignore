@@ -5,3 +5,15 @@ Application/bin-debug/FlashBoard.swf
 /.metadata
 */bin-debug/
 
+
+ImagePlugin/.actionScriptProperties
+
+StatusPlugin/.settings/org.eclipse.core.resources.prefs
+
+StatusPlugin/.project
+
+StatusPlugin/.actionScriptProperties
+
+ImagePlugin/.settings/org.eclipse.core.resources.prefs
+
+ImagePlugin/.project
