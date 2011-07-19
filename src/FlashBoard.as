@@ -12,7 +12,6 @@ package
 	
 	public class FlashBoard extends Sprite
 	{
-		
 		private var _setupMenu:ConfigurationDBox;
 		private var _xmlFilePath:String;
 		private var _xmlReloadDuration:uint;

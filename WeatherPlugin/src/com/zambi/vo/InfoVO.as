@@ -2,37 +2,44 @@ package com.zambi.vo
 {
 	public class InfoVO
 	{
-//		public var todayTemp;
-//		public var tonightTemp;
-//		public var tomorrowTemp;
-//		public var tomorrowNightTemp;
-//		
-//		public var todayWind;
-//		public var tonightWind;
-//		public var tomorrowWind;
-//		public var tomorrowNightWind;
-//		
-//		public var todayWindDir;
-//		public var tonightWindDir;
-//		public var tomorrowWindDir;
-//		public var tomorrowNightWindDir;
-//		
-//		public var todayHumid;
-//		public var tonightHumid;
-//		public var tomorrowHumid;
-//		public var tomorrowNightHumid;
-//		
-//		public var todayPrecip;
-//		public var tonightPrecip;
-//		public var tomorrowPrecip;
-//		public var tomorrowNightPrecip;
-//		
-//		public var todayCondition;
-//		public var tonightCondition;
-//		public var tomorrowCondition;
-//		public var tomorrowNightCondition;
+		public var todayTemp:String;
+		public var tonightTemp:String;
+		public var tomorrowTemp:String;
+		public var tomorrowNightTemp:String;
 		
-		public var weatherVOs:Array;
+		public var todayWind:String;
+		public var tonightWind:String;
+		public var tomorrowWind:String;
+		public var tomorrowNightWind:String;
+		
+		public var todayWindDir:String;
+		public var tonightWindDir:String;
+		public var tomorrowWindDir:String;
+		public var tomorrowNightWindDir:String;
+		
+		public var todayHumid:String;
+		public var tonightHumid:String;
+		public var tomorrowHumid:String;
+		public var tomorrowNightHumid:String;
+		
+		public var todayPrecip:String;
+		public var tonightPrecip:String;
+		public var tomorrowPrecip:String;
+		public var tomorrowNightPrecip:String;
+		
+		public var todayCondition:String;
+		public var tonightCondition:String;
+		public var tomorrowCondition:String;
+		public var tomorrowNightCondition:String;
+		
+		public var todaySunrise:String;
+		public var tonightSunset:String;
+		public var tomorrowSunrise:String;
+		public var tomorrowNightSunset:String;
+		
+		public var icon:String;
+		
+		//public var weatherVOs:Array;
 		
 		public var feelsLike:String;
 		public var dewPoint:String;
