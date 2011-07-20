@@ -1,7 +1,16 @@
-FlashBoard/bin-debug/FlashBoard.swf
 */.actionScriptProperties
 */.project
 */.settings/
-.metadata
 */bin-debug/
+*/.DS_Store
+*/.metadata
+*/.flexProperties
+
+.actionScriptProperties
+.project
+.settings/
+bin-debug/
+.DS_Store
+.metadata
+.flexProperties
 
