@@ -22,8 +22,10 @@ package
 		{
 			_cv = new CalendarView();
 			addChild(_cv);
+			//git hub is a big fail for this
+			//someone strangle octacat, please!!!
 			
-			var url:String = "https://www.google.com/calendar/feeds/im1h8akabjmg57qabkp2vvcrb4%40group.calendar.google.com/public/basic";
+			//var url:String = "https://www.google.com/calendar/feeds/im1h8akabjmg57qabkp2vvcrb4%40group.calendar.google.com/public/basic";
 			var cs:CalendarService = new CalendarService();
 			cs.addEventListener(CalendarServiceEvent.CALEVENT_FOUND, onCalendarService);
 			cs.load(String(xmlData.url));
