@@ -1,8 +1,8 @@
 package
 {
 	import com.Zambie.FlashBoard.Interfaces.IPlugin;
+	import com.Zambie.FlashBoard.Plugin;
 	import com.Zambie.FlashBoard.UI.ConfigurationDBox;
-	import com.Zambie.FlashBoard.Wrapper;
 	import com.jworkman.Effects.Fade;
 	
 	import flash.display.Loader;
@@ -34,7 +34,7 @@ package
 		private var _fader:Fade;
 		private var _currentSlide:int = 0;
 		
-		private var _plugins:Array = [];
+		private var _plugins:Array;
 		private var _pluginXML:Array = [];
 		private var _pluginConfigurations:Array = [];
 		
@@ -65,166 +65,75 @@ package
 				
 				loadXML();
 				
-				
-				startSlides();
-				
-			} else {
-				
-				_setupMenu.throwError("Please enter duration.");
-				
-			}
-			
-			
-			
-		}
-		
-		private function init():void {
-			
-			//This function sets up the application and all of it's dependancies in order to run. 
-			
-			
-		}
-		
-		private function onFileSelect(e:Event):void {
-			
-			//trace(e.currentTarget.nativePath);
+			} 
 			
 		}
 		
 		private function loadXML():void {
 			
 			var file:File = new File(_xmlFilePath);
-			//trace(_xmlFilePath);
-			//file.load();
-			
 			var fs:FileStream = new FileStream();
-			fs.open(file,FileMode.READ);
+			fs.open(file, FileMode.READ);
 			var str:String = fs.readUTFBytes(fs.bytesAvailable);
-			//file.addEventListener(Event.COMPLETE, onXMLLoad);
-			_xmlData = XML(str);
 			fs.close();
-			//trace(_xmlData);
-			configureDashboard();
+			_xmlData = XML(str);
 			
+			_defaultSlideTime = uint(_xmlData.configuration.slides.time);
 			
-		}
-		
-		private function configureDashboard():void {
-			
-			_defaultSlideTime = _xmlData.configuration.slides.time;
-			
-			//Settup & configure plug-ins
-			configurePlugins();
-			
-			
-			
-			
+			if (_defaultSlideTime) {
+				
+				loadPlugins();
+				
+			}
 			
 		}
 		
-		private function startSlides():void {
-			//TODO: Settup & configure timers
+		private function loadPlugins():void {
 			
-			_fader = new Fade();
-			_fader.fadeOut(_setupMenu, .08);
+			_plugins = [];
 			
-			_slideTimer = new Timer(5000);
+			for each(var pluginNode:XML in _xmlData.plugins.plugin) {
+				
+				var plugin:Plugin = new Plugin(pluginNode);
+				
+				addChild(plugin);
+				plugin.alpha = 0;
+				
+				_plugins.push(plugin);
+				
+			}
+			
+			startSlideShow();
+			
+		}
+		
+		private function startSlideShow():void {
+			
+			_plugins[0].alpha = 1;
+			
+			//Start timers
+			_slideTimer = new Timer(5 * 1000);
+			_slideTimer.addEventListener(TimerEvent.TIMER, onChangeSlide);
 			_slideTimer.start();
 			
-			_slideTimer.addEventListener(TimerEvent.TIMER, onSlideChange);
+			
 		}
 		
-		private function onSlideChange(e:TimerEvent):void {
-			_fader = new Fade();
+		private function onChangeSlide(e:TimerEvent):void {
 			
-			_fader.fadeOut(_plugins[_currentSlide], .08);
+			_plugins[_currentSlide].disconnect();
 			
-			var tmpFade:Fade = new Fade();
-			
-			_currentSlide++;
-			
-			if (_currentSlide >= _plugins.length) {
+			if (_currentSlide >= _plugins.length - 1) {
 				
 				_currentSlide = 0;
 				
-				tmpFade.fadeIn(_plugins[_currentSlide] as Sprite, .08);
-				
 			} else {
 				
-				tmpFade.fadeIn(_plugins[_currentSlide] as Sprite, .08);
+				_currentSlide++;
 				
 			}
 			
-			
-		}
-		
-		private function updateSlides():void {
-			
-			
-			
-		}
-		
-		private function configurePlugins():void {
-			
-			
-			for each (var pluginNode:XML in _xmlData.plugins.plugin) {
-				
-				//var file:File = File.desktopDirectory;
-				var file:File = File.desktopDirectory.resolvePath(pluginNode.filename);
-			
-				
-				//file.resolvePath(pluginNode.filename);
-				
-				
-				var fs:FileStream = new FileStream();
-				fs.open(file, FileMode.READ);
-				var ba:ByteArray = new ByteArray();
-				
-				fs.readBytes(ba);
-				fs.close();
-				
-				var loaderContext: LoaderContext = new LoaderContext();
-				loaderContext.allowLoadBytesCodeExecution = true;
-				
-				var l:Loader = new Loader();
-				l.loadBytes(ba,loaderContext);
-				l.contentLoaderInfo.addEventListener(Event.COMPLETE, onComplete);
-				
-				_pluginXML.push(pluginNode.data);
-				_pluginConfigurations.push(pluginNode);
-				
-				/*var l:Loader = new Loader();
-				addChild(l);
-				l.contentLoaderInfo.addEventListener(Event.COMPLETE, onComplete);
-				l.load(new URLRequest("file://" + file.nativePath));*/
-				
-			}
-			
-			
-			
-		}
-		
-		private function onComplete(e:Event):void
-		{
-			
-			var plugin:Sprite = e.currentTarget.content as Sprite;
-			_plugins.push(plugin);
-			addChild(plugin);
-			plugin.alpha = 0;
-			
-			initPlugins();
-		}
-		
-		private function initPlugins():void {
-			var i:int = 0;
-			for each(var plugin:IPlugin in _plugins) {
-				
-				plugin.init(XML(_pluginXML[i]));
-				//trace(_pluginConfigurations[i]);
-				i++;
-				
-			}
-			
+			_plugins[_currentSlide].connect();
 			
 		}
 		

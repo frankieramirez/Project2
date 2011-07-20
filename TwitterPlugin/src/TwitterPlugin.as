@@ -1,5 +1,6 @@
 package
 {
+	import com.ramirez.IPlugin;
 	import com.ramirez.events.TwitServiceEvent;
 	import com.ramirez.services.TwitService;
 	import com.ramirez.ui.TweetPanel;
@@ -15,11 +16,12 @@ package
 		{
 		} 
 		
-		public function initialize(xmlData:XML):void
+		public function init(xmlData:XML):void
 		{	
 			var tsvc:TwitService = new TwitService();
 			tsvc.search(xmlData.text());
 			tsvc.addEventListener(TwitServiceEvent.DATA_LOADED,onDataLoaded);
+			
 		}
 		
 		public function onDataLoaded(e:TwitServiceEvent):void

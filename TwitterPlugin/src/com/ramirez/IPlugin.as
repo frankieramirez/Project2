@@ -1,4 +1,4 @@
-package com.Zambie.FlashBoard.Interfaces
+package com.ramirez
 {
 	public interface IPlugin
 	{
