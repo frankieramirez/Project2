@@ -1,6 +1,7 @@
 package
 {
 	import com.zambi.ui.Panel;
+	import com.zambi.vo.InfoVO;
 	
 	import flash.display.Loader;
 	import flash.display.Sprite;
@@ -11,28 +12,38 @@ package
 	[SWF(width="1080",height="785")]
 	public class StatusPlugin extends Sprite
 	{
-		private var _usernames:Array = [];
-		private var _fullNames:Array = [];
-		private var _statuses:Array = [];
+		private var _p:Panel;
 		
 		public function StatusPlugin()
 		{
-			var p:Panel = new Panel();
-			this.addChild(p);
-			p.detailView(_usernames,_fullNames);
+			_p = new Panel();
+			this.addChild(_p);
+			//init();
 		}
 		
-		public function initialize(xmlData:XML):void
+		public function init(xmlData:XML):void
 		{
+			//var usernames:Array = ["fjramirez249@me.com","oscar.cortez@me.com","sbernath@me.com"];
+			//var fullNames:Array = ["Frankie Ramirez", "Oscar Cortez", "Sean Bernath"];
+			var data:Array = [];
+			
+//			for each(var u:String in usernames)
+//			{
+//				_vo = new InfoVO();
+//				_vo.username = u;
+//				data.push(_vo);
+//			}
+			
 			for each(var user:XML in xmlData.userName)
 			{	
-				_usernames.push(user.text());
+				var vo:InfoVO = new InfoVO();
+				vo.fullName = user.@fullName;
+				vo.username = user.@username;
+				data.push(vo);
 			}
 			
-			for each(var name:XML in xmlData.fullName)
-			{
-				_fullNames.push(name.text());
-			}
+			
+			_p.update(data);
 		}
 	}
 }
