@@ -1,38 +1,7 @@
 FlashBoard/bin-debug/FlashBoard.swf
-*/.actionScriptProperties/
-/.project
-/.settings/
-/.metadata
+*/.actionScriptProperties
+*/.project
+*/.settings/
+.metadata
 */bin-debug/
-<<<<<<< HEAD
-*/libs/*.swf
-=======
-*/libs/*.swf
-FlashBoard.swf
 
-
-NewsPlugin/html-template/swfobject.js
-CalendarPlugin/.settings/org.eclipse.core.resources.prefs
-CalendarPlugin/html-template/playerProductInstall.swf
-NewsPlugin/html-template/playerProductInstall.swf
-NewsPlugin/.settings/org.eclipse.core.resources.prefs
-CalendarPlugin/html-template/
-NewsPlugin/html-template/index.template.html
-NewsPlugin/html-template/history/historyFrame.html
-NewsPlugin/html-template/history/history.js
-NewsPlugin/html-template/history/history.css
-CalendarPlugin/.project
-CalendarPlugin/.actionScriptProperties
-NewsPlugin/.actionScriptProperties
-NewsPlugin/.project
->>>>>>> d84ce5e0f9b75a5cb8b0101258456930fc9e8510
-
-NewsPlugin/assets/assets.swf
-
-NewsPlugin/assets/assets.swc
-
-CalendarPlugin/libs/assets.swc
-
-NewsPlugin/assets/assets.fla
-
-CalendarPlugin/libs/assets.fla

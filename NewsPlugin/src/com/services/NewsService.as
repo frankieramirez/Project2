@@ -30,7 +30,6 @@ package com.services
 		private function onLoadComplete(e:Event):void
 		{
 			var xmlData:XML = XML(e.currentTarget.data);
-			trace(xmlData);
 			for each (var item:XML in xmlData.channel.item)
 			{
 				var nv:NewsVO = new NewsVO();
