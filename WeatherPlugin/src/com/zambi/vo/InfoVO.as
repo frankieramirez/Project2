@@ -2,6 +2,7 @@ package com.zambi.vo
 {
 	public class InfoVO
 	{
+		/*
 		public var todayTemp:String;
 		public var tonightTemp:String;
 		public var tomorrowTemp:String;
@@ -36,16 +37,23 @@ package com.zambi.vo
 		public var tonightSunset:String;
 		public var tomorrowSunrise:String;
 		public var tomorrowNightSunset:String;
-		
+		*/
 		public var icon:String;
 		
-		//public var weatherVOs:Array;
+		public var weatherVOs:Array;
 		
 		public var feelsLike:String;
 		public var dewPoint:String;
 		public var visibility:String;
 		public var iUV:String;
 		public var tUV:String;
+		public var humid:String;
+		public var temp:String;
+		public var windSpeed:String;
+		public var windDir:String;
+		public var sunrise:String;
+		public var sunset:String;
+		
 		
 		public function InfoVO()
 		{

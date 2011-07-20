@@ -24,18 +24,9 @@ package
 		
 		private function onComplete(e:Event):void
 		{
-			
+			this.addChild(e.currentTarget.content);
 		}
 		
-		public function connect():void
-		{
-			this.addChild(_ld.content);
-		}
-		
-		public function disconnect():void
-		{
-			this.removeChild(_ld.content);
-		}
 		
 	}
 }

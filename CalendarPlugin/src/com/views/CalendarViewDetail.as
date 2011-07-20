@@ -1,17 +1,29 @@
 package com.views
 {
+	import com.VO.CalendarVO;
+	
 	import flash.display.Sprite;
+	import flash.text.TextField;
 	
 	public class CalendarViewDetail extends Sprite
 	{
-		public function CalendarViewDetail()
+		private var _calEvent:CalendarVO;
+		private var _tf:TextField;
+		
+		public function CalendarViewDetail(calEvent:CalendarVO)
 		{
 			super();
 			
-			//TODO private var for the individual VO given
-			//TODO display the information given
-			//TODO create a setter for the var so that the information can be changed
-			//TODO find out if this item is the first, and if so change it to the next frame
+			_calEvent = calEvent;
+			_tf = new TextField();
+			addChild(_tf);
+			_tf.text = _calEvent.title;
 		}
+
+		public function set calEvent(value:CalendarVO):void
+		{
+			_calEvent = value;
+		}
+
 	}
 }

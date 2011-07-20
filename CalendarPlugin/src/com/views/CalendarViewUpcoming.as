@@ -1,16 +1,31 @@
 package com.views
 {
+	import com.VO.CalendarVO;
+	
 	import flash.display.Sprite;
+	import flash.text.TextField;
 	
 	public class CalendarViewUpcoming extends Sprite
 	{
-		public function CalendarViewUpcoming()
+		private var _calEvent:CalendarVO;
+		private var _tf:TextField;
+		
+		//TODO display some of the information, not as much as detailed
+		public function CalendarViewUpcoming(calEvent:CalendarVO)
 		{
 			super();
 			
-			//TODO accept a VO with a setter for it to be changed
-			//TODO update text in setter
-			//TODO display some of the information, not as much as detailed
+			_calEvent = calEvent;
+			
+			_tf = new TextField();
+			addChild(_tf);
+			_tf.text = _calEvent.title;
 		}
+
+		public function set calEvent(value:CalendarVO):void
+		{
+			_calEvent = value;
+		}
+
 	}
 }

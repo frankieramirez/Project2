@@ -4,7 +4,9 @@ package com.events
 	
 	public class CalendarServiceEvent extends Event
 	{
-		//TODO add array to this event
+		public static const CALEVENT_FOUND:String = "CalEventFound";
+		
+		public var CalEvents:Array;
 		
 		public function CalendarServiceEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
 		{
