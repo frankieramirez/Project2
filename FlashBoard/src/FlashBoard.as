@@ -132,6 +132,7 @@ package
 			
 			_plugins[_plugins.length - 1].alpha = 1;
 			_plugins[_plugins.length - 1].scaleX = _plugins[_plugins.length - 1].scaleY = .35;
+			_plugins[_plugins.length - 1].x = stage.width;
 			
 			
 		}
