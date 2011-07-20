@@ -6,13 +6,13 @@ package
 	
 	import flash.display.Sprite;
 	
+	[SWF(width="1024", height="1024")]
 	public class NewsPlugin extends Sprite
 	{
 		private var _newsVw:NewsView;
 		
 		public function NewsPlugin()
 		{
-			init();
 		}
 		
 		public function connect():void
@@ -25,12 +25,12 @@ package
 			
 		}
 		
-		public function init():void
+		public function init(xml:XML):void
 		{
 			_newsVw = new NewsView();
 			addChild(_newsVw);
 			
-			var url:String = "http://hosted.ap.org/lineups/TOPHEADS-rss_2.0.xml?SITE=WYCHE&SECTION=HOME";
+			var url:String = XML(xml.data.url);
 			var ns:NewsService = new NewsService();
 			ns.addEventListener(NewsServiceEvent.NEWS_FOUND, onNewsFound);
 			ns.load(url);

@@ -7,31 +7,21 @@ package
 	import flash.display.Sprite;
 	import flash.events.Event;
 	
+	[SWF(width="1024", height="1024")]
 	public class CalendarPlugin extends Sprite
 	{
 		private var _cv:CalendarView;
 		
 		public function CalendarPlugin()
 		{
-			init();
 		}
 		
-		public function connect():void
-		{
-			
-		}
-		
-		public function disconnect():void
-		{
-			
-		}
-		
-		public function init():void
+		public function init(xml:XML):void
 		{
 			_cv = new CalendarView();
 			addChild(_cv);
 			
-			var url:String = "https://www.google.com/calendar/feeds/im1h8akabjmg57qabkp2vvcrb4%40group.calendar.google.com/public/basic";
+			var url:String = XML(xml.data.url);
 			var cs:CalendarService = new CalendarService();
 			cs.addEventListener(CalendarServiceEvent.CALEVENT_FOUND, onCalendarService);
 			cs.load(url);

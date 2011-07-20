@@ -2,7 +2,9 @@ package com.views
 {
 	import flash.display.Sprite;
 	
-	public class CalendarView extends Sprite
+	import libs.CalendarViewBase;
+	
+	public class CalendarView extends CalendarViewBase
 	{
 		private var _calEvents:Array = [];
 		private var _displayedItems:Array = [];
@@ -19,7 +21,7 @@ package com.views
 			for(var i:int; i < 3; i++)
 			{
 				var cvd:CalendarViewDetail = new CalendarViewDetail(_calEvents[i]);
-				cvd.y += 30*i;
+				cvd.y += (cvd.height*i) + 100;
 				addChild(cvd);
 				_displayedItems.push(cvd);
 			}
@@ -27,8 +29,8 @@ package com.views
 			for(var j:int = 3; j < _calEvents.length; j++)
 			{
 				var cvu:CalendarViewUpcoming = new CalendarViewUpcoming(_calEvents[j]);
-				cvu.x = 150;
-				cvu.y = (20*j) - 60;
+				cvu.x = cvd.width + 20;
+				cvu.y = (cvu.height*j);
 				addChild(cvu);
 				_displayedItems.push(cvd);
 			}

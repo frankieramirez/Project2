@@ -18,7 +18,7 @@ package
 		public function initialize(xmlData:XML):void
 		{
 			_ld = new Loader();
-			_ld.load(new URLRequest(xmlData.text());
+			_ld.load(new URLRequest(xmlData.url.text());
 			_ld.contentLoaderInfo.addEventListener(Event.COMPLETE,onComplete);
 		}
 		
