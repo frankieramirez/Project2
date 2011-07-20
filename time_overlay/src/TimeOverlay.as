@@ -20,6 +20,8 @@ package
 		private var _seconds:int;
 		private var _timeDisplay:TimeOverlayBase;
 		private var _dateFormat:String = "m/d/yy";
+		public var type:String = "time";
+		public var slideDuration:Number = 1;
 		
 		public function TimeOverlay()
 		{
@@ -174,6 +176,8 @@ package
 			return str;
 			
 		}
+		
+		
 		
 		
 		

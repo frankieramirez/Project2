@@ -13,13 +13,15 @@ package com.Zambie.FlashBoard
 	import flash.system.LoaderContext;
 	import flash.utils.ByteArray;
 	
-	public class Plugin extends Sprite
+	public class Plugin extends Sprite implements IPlugin
 	{
 		
 		private var _pluginXML:XML;
 		private var _fader:Fade;
 		private var _plugin:Sprite;
 		private var _iplugin:*;
+		private var _type:String;
+		private var _slideDuration:Number;
 		
 		public function Plugin(xmlData:XML)
 		{
@@ -37,6 +39,22 @@ package com.Zambie.FlashBoard
 			
 		}
 		
+		public function init(xmlData:XML):void {
+			
+			_iplugin.init(XML(xmlData));
+			
+		}
+		
+		public function get slideDuration():Number
+		{
+			return _slideDuration;
+		}
+
+		public function get type():String
+		{
+			return _type;
+		}
+
 		private function setupPlugin():void {
 			
 			//var file:File = File.desktopDirectory;
@@ -69,9 +87,14 @@ package com.Zambie.FlashBoard
 			_plugin = e.currentTarget.content as Sprite;
 			addChild(_plugin);
 			
-			_iplugin = _plugin as IPlugin;
+			_iplugin = _plugin;
 			
 			_iplugin.init(XML(_pluginXML.data));
+			
+			_type = _iplugin.type;
+			_slideDuration = _iplugin.slideDuration;
+			
+			
 			
 		}
 		

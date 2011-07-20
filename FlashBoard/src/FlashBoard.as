@@ -99,6 +99,9 @@ package
 				var plugin:Plugin = new Plugin(pluginNode);
 				
 				addChild(plugin);
+				
+				
+				
 				plugin.alpha = 0;
 				
 				_plugins.push(plugin);
@@ -112,6 +115,8 @@ package
 		private function startSlideShow():void {
 			
 			_plugins[0].alpha = 1;
+			_plugins[_plugins.length - 1].alpha = 1;
+			_plugins[_plugins.length - 1].scaleX = _plugins[_plugins.length - 1].scaleY = .5;
 			
 			//Start timers
 			_slideTimer = new Timer(5 * 1000);
@@ -125,7 +130,7 @@ package
 			
 			_plugins[_currentSlide].disconnect();
 			
-			if (_currentSlide >= _plugins.length - 1) {
+			if (_currentSlide >= _plugins.length - 2) {
 				
 				_currentSlide = 0;
 				
