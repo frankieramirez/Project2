@@ -116,7 +116,7 @@ package
 			
 			_plugins[0].alpha = 1;
 			_plugins[_plugins.length - 1].alpha = 1;
-			_plugins[_plugins.length - 1].scaleX = _plugins[_plugins.length - 1].scaleY = .5;
+			_plugins[_plugins.length - 1].scaleX = _plugins[_plugins.length - 1].scaleY = .35;
 			
 			//Start timers
 			_slideTimer = new Timer(5 * 1000);
