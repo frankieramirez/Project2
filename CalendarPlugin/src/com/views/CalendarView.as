@@ -30,7 +30,7 @@ package com.views
 			{
 				var cvu:CalendarViewUpcoming = new CalendarViewUpcoming(_calEvents[j]);
 				cvu.x = cvd.width + 20;
-				cvu.y = (20*j) - 60;
+				cvu.y = (cvu.height*j);
 				addChild(cvu);
 				_displayedItems.push(cvd);
 			}
