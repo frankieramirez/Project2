@@ -115,13 +115,23 @@ package
 		private function startSlideShow():void {
 			
 			_plugins[0].alpha = 1;
-			_plugins[_plugins.length - 1].alpha = 1;
-			_plugins[_plugins.length - 1].scaleX = _plugins[_plugins.length - 1].scaleY = .35;
+			
+			_setupMenu.alpha = 0;
+			
+			initClock();
 			
 			//Start timers
 			_slideTimer = new Timer(5 * 1000);
 			_slideTimer.addEventListener(TimerEvent.TIMER, onChangeSlide);
 			_slideTimer.start();
+			
+			
+		}
+		
+		private function initClock():void {
+			
+			_plugins[_plugins.length - 1].alpha = 1;
+			_plugins[_plugins.length - 1].scaleX = _plugins[_plugins.length - 1].scaleY = .35;
 			
 			
 		}
