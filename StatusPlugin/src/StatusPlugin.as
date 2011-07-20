@@ -34,11 +34,11 @@ package
 //				data.push(_vo);
 //			}
 			
-			for each(var user:XML in xmlData.userName)
+			for each(var user:XML in xmlData.user)
 			{	
 				var vo:InfoVO = new InfoVO();
-				vo.fullName = user.@fullName;
-				vo.username = user.@username;
+				vo.fullName = user.fullName.text();
+				vo.username = user.screenName.text();
 				data.push(vo);
 			}
 			
