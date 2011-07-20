@@ -17,8 +17,8 @@ package com.ramirez.ui
 			this.tfTweet.text = tweet;
 			this.tfTime.text = time;
 			
-			var tweetDate:Date = vo.
-			
+			var tweetDate:Date = time as Date;
+						
 			var ld:Loader = new Loader();
 			ld.load(new URLRequest(img));
 			ld.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoad);

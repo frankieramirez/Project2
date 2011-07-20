@@ -31,6 +31,7 @@ package com.ramirez.ui
 					this.tfUsername.text = vo.name;
 					this.tfTweet.text = vo.tweet;
 					this.tfTime.text = vo.timeCreated;
+					
 					var ld:Loader = new Loader();
 					ld.load(new URLRequest(vo.img_url));
 					ld.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoad);
