@@ -1,7 +1,7 @@
 FlashBoard/bin-debug/FlashBoard.swf
 */.actionScriptProperties
-/.project
-/.settings/
-/.metadata
+*/.project
+*/.settings/
+.metadata
 */bin-debug/
 
