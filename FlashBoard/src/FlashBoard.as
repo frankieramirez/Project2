@@ -1,6 +1,6 @@
 package
 {
-	import com.Zambie.FlashBoard.Interfaces.IPlugin;
+	
 	import com.Zambie.FlashBoard.Plugin;
 	import com.Zambie.FlashBoard.UI.ConfigurationDBox;
 	import com.jworkman.Effects.Fade;

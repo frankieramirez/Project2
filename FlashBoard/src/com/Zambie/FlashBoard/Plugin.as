@@ -1,6 +1,7 @@
 package com.Zambie.FlashBoard
 {
-	import com.Zambie.FlashBoard.Interfaces.IPlugin;
+	
+	import com.Zambie.FlashBoard.Interface.IPlugin;
 	import com.jworkman.Effects.Fade;
 	
 	import flash.display.Loader;
@@ -68,7 +69,7 @@ package com.Zambie.FlashBoard
 			_plugin = e.currentTarget.content as Sprite;
 			addChild(_plugin);
 			
-			_iplugin = _plugin;
+			_iplugin = _plugin as IPlugin;
 			
 			_iplugin.init(XML(_pluginXML.data));
 			
