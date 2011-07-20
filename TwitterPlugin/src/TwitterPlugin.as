@@ -8,10 +8,10 @@ package
 	import flash.display.Sprite;
 	
 	[SWF(width="1024", height="768")]
-	public class TwitterPlugin extends Sprite implements IPlugin
+	public class TwitterPlugin extends Sprite
 	{
 		private var _tPanel:TweetPanel;
-		private var _pluginName:String = "TwitterPlugin";
+		private var _pluginType:String = "TwitterPlugin";
 		
 		public function TwitterPlugin()
 		{
@@ -32,9 +32,9 @@ package
 			_tPanel.addDetail();
 		}
 		
-		public function get pluginName():String
+		public function get pluginType():String
 		{
-			return _pluginName;
+			return _pluginType;
 		}
 	}
 }
