@@ -6,6 +6,7 @@ package
 	
 	import flash.display.Sprite;
 	
+	[SWF(width="1024", height="1024")]
 	public class NewsPlugin extends Sprite
 	{
 		private var _newsVw:NewsView;
