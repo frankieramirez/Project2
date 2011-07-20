@@ -43,7 +43,8 @@ package com.Zambie.FlashBoard.UI
 			
 			var file:File = new File();
 			file.addEventListener(Event.SELECT, onFileSelect);
-			file.browse([new FileFilter("xmldata", "*.xml;")]);
+			//file.browse([new FileFilter("xmldata", "*.xml;")]);
+			file.browseForOpen("Please select configuration XML", [new FileFilter("xmldata", "*.xml;")]);
 			
 		}
 		
@@ -60,11 +61,7 @@ package com.Zambie.FlashBoard.UI
 				
 				dispatchEvent(new Event(ConfigurationDBox.CONFIGURATION_COMPLETE));
 				
-			} else {
-				
-				trace("wong");
-			
-			}
+			} 
 			
 		}
 		

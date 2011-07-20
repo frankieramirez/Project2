@@ -61,6 +61,8 @@ package
 			_xmlFilePath = _setupMenu.filePath;
 			_xmlReloadDuration = _setupMenu.reloadDuration;
 			
+			
+			
 			if (_xmlReloadDuration) {
 				
 				loadXML();

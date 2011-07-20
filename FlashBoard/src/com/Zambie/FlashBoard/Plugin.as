@@ -69,8 +69,8 @@ package com.Zambie.FlashBoard
 			addChild(_plugin);
 			
 			_iplugin = _plugin;
-			trace(_pluginXML);
-			_iplugin.init(_pluginXML);
+			
+			_iplugin.init(XML(_pluginXML.data));
 			
 		}
 		

@@ -47,7 +47,7 @@ package
 		
 		public function init(xmlData:XML):void {
 			
-			trace(xmlData);
+			
 			
 			_timeDisplay = new TimeOverlayBase();
 			_timeDisplay.week_day.stop();

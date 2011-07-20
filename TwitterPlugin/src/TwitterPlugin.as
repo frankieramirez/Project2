@@ -1,6 +1,6 @@
 package
 {
-	import com.ramirez.IPlugin;
+	import com.Zambie.FlashBoard.Interface.IPlugin;
 	import com.ramirez.events.TwitServiceEvent;
 	import com.ramirez.services.TwitService;
 	import com.ramirez.ui.TweetPanel;
@@ -8,7 +8,7 @@ package
 	import flash.display.Sprite;
 	
 	[SWF(width="1024", height="768")]
-	public class TwitterPlugin extends Sprite implements IPlugin 
+	public class TwitterPlugin extends Sprite implements IPlugin
 	{
 		private var _tPanel:TweetPanel;
 		private var _pluginName:String = "TwitterPlugin";
