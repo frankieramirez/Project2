@@ -3,6 +3,7 @@ package com.ramirez.ui
 	import com.ramirez.events.TwitServiceEvent;
 	import com.ramirez.vo.InfoVO;
 	
+	import flash.display.Bitmap;
 	import flash.display.Loader;
 	import flash.events.Event;
 	import flash.net.URLRequest;
@@ -49,7 +50,9 @@ package com.ramirez.ui
 		private function onLoad(e:Event):void
 		{
 			this.imgBase.addChild(e.currentTarget.content);
-			e.currentTarget.content.scaleX = e.currentTarget.content.scaleY = 1.5;
+			e.currentTarget.content.scaleX = e.currentTarget.content.scaleY = 2;
+			Bitmap(e.currentTarget.content).smoothing = true;
 		}
+		
 	}
 }

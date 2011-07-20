@@ -5,7 +5,9 @@ package com.views
 	import flash.display.Sprite;
 	import flash.text.TextField;
 	
-	public class CalendarViewUpcoming extends Sprite
+	import libs.CalendarViewUpcomingBase;
+	
+	public class CalendarViewUpcoming extends CalendarViewUpcomingBase
 	{
 		private var _calEvent:CalendarVO;
 		private var _tf:TextField;
@@ -17,9 +19,11 @@ package com.views
 			
 			_calEvent = calEvent;
 			
-			_tf = new TextField();
-			addChild(_tf);
-			_tf.text = _calEvent.title;
+			tfUpcomingTime.text = "??:??";
+			tfUpcomingTitle.text = _calEvent.title;
+			//_tf = new TextField();
+			//addChild(_tf);
+			//_tf.text = _calEvent.title;
 		}
 
 		public function set calEvent(value:CalendarVO):void

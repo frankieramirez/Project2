@@ -7,6 +7,7 @@ package
 	import flash.display.Sprite;
 	import flash.events.Event;
 	
+	[SWF(width="1024", height="1024")]
 	public class CalendarPlugin extends Sprite
 	{
 		private var _cv:CalendarView;
@@ -14,16 +15,6 @@ package
 		public function CalendarPlugin()
 		{
 			init();
-		}
-		
-		public function connect():void
-		{
-			
-		}
-		
-		public function disconnect():void
-		{
-			
 		}
 		
 		public function init():void
