@@ -154,9 +154,11 @@ package
 				
 			}
 			
-			if (_plugins[_currentSlide].type == "video" || _plugins[_currentSlide].type == "image") {
+			if (_plugins[_currentSlide].type == "video") {
 				
-				_plugins[_currentSlide].addEventListner(Plugin.SLIDE_DONE, onVideoDone);
+				_slideTimer.removeEventListener(TimerEvent.TIMER, onChangeSlide);
+				
+				(_plugins[_currentSlide] as Sprite).addEventListener(Plugin.SLIDE_DONE, onVideoDone);
 				_plugins[_currentSlide].connect();
 				
 			} else {

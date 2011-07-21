@@ -121,6 +121,12 @@ package com.Zambie.FlashBoard
 			
 		}
 		
+		public function notifyDashBoard():void {
+			
+			
+			
+		}
+		
 		private function onVideoDone(e:Event):void {
 			
 			var evt:Event = new Event(Plugin.SLIDE_DONE);
@@ -139,6 +145,8 @@ package com.Zambie.FlashBoard
 			
 			
 		}
+		
+		
 		
 		
 		
