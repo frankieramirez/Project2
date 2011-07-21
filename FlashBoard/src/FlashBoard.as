@@ -130,9 +130,12 @@ package
 		
 		private function initClock():void {
 			
+			
+			
 			_plugins[_plugins.length - 1].alpha = 1;
 			_plugins[_plugins.length - 1].scaleX = _plugins[_plugins.length - 1].scaleY = .35;
-			_plugins[_plugins.length - 1].x = stage.width;
+			_plugins[_plugins.length - 1].x = this.stage.stageWidth - 120;
+			_plugins[_plugins.length - 1].y = this.stage.stageHeight - 100;
 			
 			
 		}
