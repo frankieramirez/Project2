@@ -13,7 +13,7 @@ package com.Zambie.FlashBoard
 	import flash.system.LoaderContext;
 	import flash.utils.ByteArray;
 	
-	public class Plugin extends Sprite implements IPlugin
+	public class Plugin extends Sprite
 	{
 		
 		private var _pluginXML:XML;
@@ -101,12 +101,14 @@ package com.Zambie.FlashBoard
 		public function connect():void {
 			
 			_fader.fadeIn(this, .08);
+			_iplugin.connect();
 			
 		}
 		
 		public function disconnect():void {
 			
 			_fader.fadeOut(this, .05);
+			_iplugin.disconnect();
 			
 		}
 		
