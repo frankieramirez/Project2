@@ -25,6 +25,7 @@
         </excludedEntries>
       </libraryPathEntry>
       <libraryPathEntry kind="3" linkType="1" path="libs/TimeOverlay.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="1" path="/IPlugin_Interface/bin/IPlugin_Interface.swc" useDefaultLinkType="false"/>
     </libraryPath>
     <sourceAttachmentPath/>
   </compiler>
