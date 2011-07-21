@@ -26,10 +26,15 @@ package
 		public function TimeOverlay()
 		{
 			
-			
+			trace(this.width);
 			
 		}
 		
+		public function get timeDisplay():TimeOverlayBase
+		{
+			return _timeDisplay;
+		}
+
 		public function connect():void {
 			
 			var shape:Sprite = new Sprite();
