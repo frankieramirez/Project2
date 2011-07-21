@@ -35,22 +35,7 @@ package
 			return _timeDisplay;
 		}
 
-		public function connect():void {
-			
-			var shape:Sprite = new Sprite();
-			addChild(shape);
-			shape.graphics.beginFill(0xffffff);
-			shape.graphics.drawRect(0, 0, this.width, this.height);
-			shape.graphics.endFill();
-			
-			
-		}
 		
-		public function disconnect():void {
-			
-			
-			
-		}
 		
 		public function init(xmlData:XML):void {
 			
@@ -179,6 +164,18 @@ package
 			}
 			
 			return str;
+			
+		}
+		
+		public function connect():void {
+			
+			trace("connected");
+			
+		}
+		
+		public function disconnect():void {
+			
+			trace("disconnected");
 			
 		}
 		

@@ -22,6 +22,7 @@ package com.Zambie.FlashBoard
 		private var _iplugin:*;
 		private var _type:String;
 		private var _slideDuration:Number;
+		public static const SLIDE_DONE:String = "slide done";
 		
 		public function Plugin(xmlData:XML)
 		{
@@ -100,15 +101,42 @@ package com.Zambie.FlashBoard
 		
 		public function connect():void {
 			
-			_fader.fadeIn(this, .08);
-			_iplugin.connect();
+			if (_type == "time") {
+				
+				
+				
+			} else if (_type == "video") {
+				
+				_plugin.addEventListener(Event.COMPLETE, onVideoDone);
+				_fader.fadeIn(this, .08);
+				_iplugin.connect();
+				
+			} else {
+				
+				_fader.fadeIn(this, .08);
+				_iplugin.connect();
+				
+			}
+			
+			
+		}
+		
+		private function onVideoDone(e:Event):void {
+			
+			var evt:Event = new Event(Plugin.SLIDE_DONE);
+			dispatchEvent(evt);
 			
 		}
 		
 		public function disconnect():void {
 			
-			_fader.fadeOut(this, .05);
-			_iplugin.disconnect();
+			if (_type != "time") {
+				
+				_fader.fadeOut(this, .08);
+				_iplugin.disconnect();
+				
+			}
+			
 			
 		}
 		

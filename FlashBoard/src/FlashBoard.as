@@ -154,7 +154,28 @@ package
 				
 			}
 			
-			_plugins[_currentSlide].connect();
+			if (_plugins[_currentSlide].type == "video" || _plugins[_currentSlide].type == "image") {
+				
+				_plugins[_currentSlide].addEventListner(Plugin.SLIDE_DONE, onVideoDone);
+				_plugins[_currentSlide].connect();
+				
+			} else {
+				
+				_plugins[_currentSlide].connect();
+				
+				
+				
+			}
+			
+			
+			
+		}
+		
+		private function onVideoDone(e:Event):void {
+			
+			_slideTimer = new Timer(5 * 1000);
+			_slideTimer.addEventListener(TimerEvent.TIMER, onChangeSlide);
+			_slideTimer.start();
 			
 		}
 		
