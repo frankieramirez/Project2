@@ -12,7 +12,7 @@ package com.Zambie.FlashBoard.Interface
 	public class Plugin extends Sprite
 	{
 		
-		private var _duration:uint;
+		private var _duration:uint = 1;
 		private var _fader:Fade; 
 		private var _timer:Timer;
 		public static const TIME_DONE:String = "Time over";
@@ -21,7 +21,7 @@ package com.Zambie.FlashBoard.Interface
 		
 		public function Plugin():void {
 			
-			this.alpha = 0;
+			
 			
 		}
 		
@@ -49,7 +49,7 @@ package com.Zambie.FlashBoard.Interface
 			
 			_timer.stop();
 			var evt:Event = new Event(TIME_DONE);
-			dispatchEvent(evt);
+			this.dispatchEvent(evt);
 			
 		}
 		

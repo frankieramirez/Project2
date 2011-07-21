@@ -155,7 +155,7 @@ package
 		}
 		
 		private function onSlideDone(e:Event):void {
-			
+			trace("hi");
 			
 			if(_plugins[_currentSlide])
 			{

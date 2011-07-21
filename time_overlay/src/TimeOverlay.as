@@ -26,8 +26,7 @@ package
 		
 		public function TimeOverlay()
 		{
-			this.fileName = "TimeOverlay2.swf";
-			
+			this.fileName = "TimeOverlay.swf";
 			trace(this.width);
 			
 		}
@@ -169,17 +168,7 @@ package
 			
 		}
 		
-		override public function connect():void {
-			
-			trace("connected");
-			
-		}
 		
-		override public function disconnect():void {
-			
-			trace("disconnected");
-			
-		}
 		
 		
 		
