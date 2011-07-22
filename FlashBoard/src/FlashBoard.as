@@ -5,6 +5,7 @@ package
 	import com.Zambie.FlashBoard.UI.ConfigurationDBox;
 	import com.jworkman.Effects.Fade;
 	
+	import flash.display.Bitmap;
 	import flash.display.Loader;
 	import flash.display.LoaderInfo;
 	import flash.display.Sprite;
@@ -15,33 +16,48 @@ package
 	import flash.filesystem.FileMode;
 	import flash.filesystem.FileStream;
 	import flash.net.FileFilter;
+	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import flash.system.LoaderContext;
 	import flash.utils.ByteArray;
 	import flash.utils.Timer;
 	import flash.utils.getDefinitionByName;
 	
+	[SWF(width="1024", height="768", backgroundColor="0x000000")]
 	
 	public class FlashBoard extends Sprite
 	{
 		
-		private var _setupMenu:ConfigurationDBox;
+		//XML related variables
 		private var _xmlFilePath:String;
 		private var _xmlReloadDuration:uint;
 		private var _xmlData:XML;
+		private var _xmlTimer:Timer;
+		private var _xmlFileMode:String;
+		
+		//Setup/Configuration window
+		private var _setupMenu:ConfigurationDBox;
+		
+		//Slide related variables
 		private var _defaultSlideTime:uint;
 		private var _slideTimer:Timer;
-		private var _xmlTimer:Timer;
-		private var _fader:Fade;
 		private var _currentSlide:int = 0;
+		private var _slideStarted:Boolean = false;
 		
+		//Plugin related variables
+		private var _pluginsDir:String;
 		private var _plugins:Array = [];
 		private var _pluginXML:Array = [];
 		private var _pluginConfigurations:Array = [];
-		
 		private var pluginList:Object;
-		private var _slideStarted:Boolean = false;
 		private var _numPlugins:int = 0;
+		
+		//Fade & Effects settings
+		private var _fader:Fade;
+		private var _transitions:Array;
+		
+		private var _background:Bitmap;
+		
 		
 		public function FlashBoard()
 		{
@@ -56,19 +72,22 @@ package
 			//Setup background image
 			this.stage.displayState = StageDisplayState.FULL_SCREEN;
 			
-			
+			_fader = new Fade;
 			_setupMenu = new ConfigurationDBox();
 			_setupMenu.addEventListener(ConfigurationDBox.CONFIGURATION_COMPLETE, onConfigurationComplete);
 			this.addChild(_setupMenu);
-			_setupMenu.x = this.stage.stageWidth/2;
-			_setupMenu.y = this.stage.stageHeight/2;
+			_setupMenu.x = this.stage.stageWidth/2 - _setupMenu.width;
+			_setupMenu.y = this.stage.stageHeight/2 - _setupMenu.height/2;
+			trace(_setupMenu.height);
 			_setupMenu.initUI();
 			
 		}
 		
+		
+		
 		private function onConfigurationComplete(e:Event):void {
 			
-			_xmlFilePath = _setupMenu.filePath;
+			/*_xmlFilePath = _setupMenu.filePath;
 			_xmlReloadDuration = _setupMenu.reloadDuration;
 			
 			
@@ -77,7 +96,71 @@ package
 				
 				loadXML();
 				
-			} 
+			} */
+			
+			
+			//This section is for rather loading a local .xml, or remote
+			_xmlFileMode = _setupMenu.getFileMode();
+			
+			if (_xmlFileMode == "local" && _setupMenu.filePath) {
+				
+				_xmlFilePath = _setupMenu.filePath;
+				
+				loadXML();
+				
+			} else if (_xmlFileMode == "remote") {
+				
+				_xmlFilePath = _setupMenu.web_address.text;
+				loadRemoteXML();
+				
+			} else {
+				
+				_setupMenu.throwError(_xmlFileMode);
+				
+			}
+			
+			if (_setupMenu.startup_checkbox.selected) {
+				
+				//TODO: Make application launch at startup
+				
+			} else {
+				
+				//TOTO: Disable application launch at startup if exists
+				
+			}
+			
+			this.removeChild(_setupMenu);
+			
+		}
+		
+		private function loadRemoteXML():void {
+			
+			var ul:URLLoader = new URLLoader();
+			var ur:URLRequest = new URLRequest("http://" + _xmlFilePath);
+			ul.addEventListener(Event.COMPLETE, onXMLLoaded);
+			ul.load(ur);
+			
+		}
+		
+		private function onXMLLoaded(e:Event):void {
+			
+			_xmlData = XML(e.currentTarget.data);
+			loadBackground();
+			_defaultSlideTime = uint(_xmlData.configuration.slides.time);
+			_pluginsDir = String(_xmlData.plugins.@directory);
+			_transitions = [];
+			
+			
+			
+			_transitions["fadeIn"] = uint(_xmlData.configuration.slides.transitions.@fadeIn);
+			_transitions["fadeOut"] = uint(_xmlData.configuration.slides.transitions.@fadeOut);
+			
+			
+			if (_defaultSlideTime) {
+				
+				loadPlugins();
+				
+			}
 			
 		}
 		
@@ -89,14 +172,45 @@ package
 			var str:String = fs.readUTFBytes(fs.bytesAvailable);
 			fs.close();
 			_xmlData = XML(str);
+			loadBackground();
 			
 			_defaultSlideTime = uint(_xmlData.configuration.slides.time);
+			_pluginsDir = String(_xmlData.plugins.@directory);
+			_transitions = [];
+			
+			
+			
+			_transitions["fadeIn"] = uint(_xmlData.configuration.slides.transitions.@fadeIn);
+			_transitions["fadeOut"] = uint(_xmlData.configuration.slides.transitions.@fadeOut);
+			
 			
 			if (_defaultSlideTime) {
 				
 				loadPlugins();
 				
 			}
+			
+		}
+		
+		private function loadBackground():void {
+			
+			var ld:Loader = new Loader();
+			var ur:URLRequest = new URLRequest(String(_xmlData.configuration.theme.background.url));
+			ld.contentLoaderInfo.addEventListener(Event.COMPLETE, onBackgroundLoad);
+			ld.load(ur);
+			
+		}
+		
+		private function onBackgroundLoad(e:Event):void {
+			
+			_background = e.currentTarget.content as Bitmap;
+			
+			this.addChildAt(_background, 0);
+			_fader.fadeInBitmap(_background, .015, Number(_xmlData.configuration.theme.background.opacity) / 100);
+			
+			_background.smoothing = true;
+			_background.scaleX = _background.scaleY = .5;
+			_background.x -= 150;
 			
 		}
 		
@@ -168,9 +282,27 @@ package
 				
 			}
 			
+			if (String(pluginList[plugin.fileName].transition.@fadeIn) != "" && String(pluginList[plugin.fileName].transition.@fadeOut) != "") {
+				
+				var tmpTrans:Array = [];
+				tmpTrans['fadeIn'] = uint(pluginList[plugin.fileName].transition.@fadeIn);
+				tmpTrans['fadeOut'] = uint(pluginList[plugin.fileName].transition.@fadeOut);
+				
+				trace(tmpTrans);
+				
+				plugin.transitions = tmpTrans;
+				
+			} else {
+				
+				plugin.transitions = _transitions;
+				
+			}
+			
 			
 			
 			addChild(plugin);
+			plugin.x = this.stage.stageWidth/2;
+			plugin.y = this.stage.stageHeight/2;
 			
 			
 			
@@ -196,7 +328,7 @@ package
 			
 			_plugins[_currentSlide].disconnect();
 			
-			if (_currentSlide >= _plugins.length - 1) {
+			if (_currentSlide >= _plugins.length - 2) {
 				
 				_currentSlide = 0;
 				

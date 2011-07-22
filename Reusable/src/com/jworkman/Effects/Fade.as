@@ -1,5 +1,6 @@
 package com.jworkman.Effects
 {
+	import flash.display.Bitmap;
 	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
@@ -9,8 +10,10 @@ package com.jworkman.Effects
 	{
 		
 		private var _obj:Sprite;
+		private var _bitmap:Bitmap;
 		private var _speed:Number;
 		private var _alpha:Number;
+		private var _fadeTo:Number;
 		
 		public function Fade()
 		{
@@ -24,6 +27,28 @@ package com.jworkman.Effects
 			_speed = speed;
 			
 			_obj.addEventListener(Event.ENTER_FRAME, startFadeOut);
+			
+		}
+		
+		public function fadeInBitmap(obj:Bitmap, speed:Number, fadeTo:Number = 1):void {
+			
+			obj.alpha = 0;
+			_fadeTo = fadeTo;
+			_bitmap = obj;
+			_speed = speed;
+			
+			_bitmap.addEventListener(Event.ENTER_FRAME, startFadeInBitmap);
+			
+		}
+		
+		private function startFadeInBitmap(e:Event):void {
+			
+			if (_bitmap.alpha >= _fadeTo) {
+				_bitmap.removeEventListener(Event.ENTER_FRAME, startFadeInBitmap);
+				dispatchCompleteEvent();
+			} else {
+				_bitmap.alpha += _speed;
+			}
 			
 		}
 		
