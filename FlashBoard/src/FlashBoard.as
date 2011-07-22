@@ -30,6 +30,7 @@ package
 		private var _xmlReloadDuration:uint;
 		private var _xmlData:XML;
 		private var _defaultSlideTime:uint;
+		private var _pluginsDir:String;
 		private var _slideTimer:Timer;
 		private var _xmlTimer:Timer;
 		private var _fader:Fade;
@@ -42,6 +43,7 @@ package
 		private var pluginList:Object;
 		private var _slideStarted:Boolean = false;
 		private var _numPlugins:int = 0;
+		private var _transitions:Array;
 		
 		public function FlashBoard()
 		{
@@ -54,7 +56,7 @@ package
 			pluginList = {};
 			
 			//Setup background image
-			this.stage.displayState = StageDisplayState.FULL_SCREEN;
+			//this.stage.displayState = StageDisplayState.FULL_SCREEN;
 			
 			
 			_setupMenu = new ConfigurationDBox();
@@ -91,6 +93,14 @@ package
 			_xmlData = XML(str);
 			
 			_defaultSlideTime = uint(_xmlData.configuration.slides.time);
+			_pluginsDir = String(_xmlData.plugins.@directory);
+			_transitions = [];
+			
+			
+			
+			_transitions["fadeIn"] = uint(_xmlData.configuration.slides.transitions.@fadeIn);
+			_transitions["fadeOut"] = uint(_xmlData.configuration.slides.transitions.@fadeOut);
+			
 			
 			if (_defaultSlideTime) {
 				
@@ -165,6 +175,22 @@ package
 			} else {
 				
 				plugin.duration = uint(XML(pluginList[plugin.fileName].duration));
+				
+			}
+			
+			if (String(pluginList[plugin.fileName].transition.@fadeIn) != "" && String(pluginList[plugin.fileName].transition.@fadeOut) != "") {
+				
+				var tmpTrans:Array = [];
+				tmpTrans['fadeIn'] = uint(pluginList[plugin.fileName].transition.@fadeIn);
+				tmpTrans['fadeOut'] = uint(pluginList[plugin.fileName].transition.@fadeOut);
+				
+				trace(tmpTrans);
+				
+				plugin.transitions = tmpTrans;
+				
+			} else {
+				
+				plugin.transitions = _transitions;
 				
 			}
 			

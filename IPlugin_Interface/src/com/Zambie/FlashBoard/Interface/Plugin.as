@@ -15,10 +15,16 @@ package com.Zambie.FlashBoard.Interface
 		private var _duration:uint = 1;
 		private var _fader:Fade; 
 		private var _timer:Timer;
+		private var _transitions:Array;
 		public static const TIME_DONE:String = "Time over";
 		
 		private var _fileName:String;
 		
+		public function set transitions(value:Array):void
+		{
+			_transitions = value;
+		}
+
 		public function set duration(value:uint):void
 		{
 			_duration = value;
@@ -49,7 +55,7 @@ package com.Zambie.FlashBoard.Interface
 		
 		public function connect():void {
 			
-			_fader.fadeIn(this, .05);
+			_fader.fadeIn(this, Number(_transitions["fadeIn"] / 100));
 			
 			if (_timer) {
 				
@@ -79,7 +85,8 @@ package com.Zambie.FlashBoard.Interface
 		
 		public function disconnect():void {
 			
-			_fader.fadeOut(this, .08);
+			_fader.fadeOut(this, Number(_transitions["fadeOut"] / 100));
+			
 			
 			
 			
