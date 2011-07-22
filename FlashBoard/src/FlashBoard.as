@@ -9,7 +9,9 @@ package
 	import flash.display.Loader;
 	import flash.display.LoaderInfo;
 	import flash.display.Sprite;
+	import flash.display.StageAlign;
 	import flash.display.StageDisplayState;
+	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.events.TimerEvent;
 	import flash.filesystem.File;
@@ -70,6 +72,8 @@ package
 			pluginList = {};
 			
 			//Setup background image
+			this.stage.scaleMode = StageScaleMode.NO_SCALE;
+			this.stage.align = StageAlign.TOP_LEFT;
 			this.stage.displayState = StageDisplayState.FULL_SCREEN;
 			
 			_fader = new Fade;
@@ -195,7 +199,7 @@ package
 		private function loadBackground():void {
 			
 			var ld:Loader = new Loader();
-			var ur:URLRequest = new URLRequest(String(_xmlData.configuration.theme.background.url));
+			var ur:URLRequest = new URLRequest(String(_xmlData.configuration.theme.background[0].url));
 			ld.contentLoaderInfo.addEventListener(Event.COMPLETE, onBackgroundLoad);
 			ld.load(ur);
 			
@@ -205,11 +209,12 @@ package
 			
 			_background = e.currentTarget.content as Bitmap;
 			
-			this.addChildAt(_background, 0);
+			//this.addChildAt(_background, 0);
 			_fader.fadeInBitmap(_background, .015, Number(_xmlData.configuration.theme.background.opacity) / 100);
 			
 			_background.smoothing = true;
-			_background.scaleX = _background.scaleY = .5;
+			_background.scaleX = .82;
+			_background.scaleY = .85;
 			_background.x -= 150;
 			
 		}
@@ -301,8 +306,8 @@ package
 			
 			
 			addChild(plugin);
-			plugin.x = this.stage.stageWidth/2;
-			plugin.y = this.stage.stageHeight/2;
+			//plugin.x = this.stage.stageWidth/2;
+			//plugin.y = this.stage.stageHeight/2;
 			
 			
 			
@@ -318,6 +323,7 @@ package
 				
 			}
 			
+			_plugins[_currentSlide].alpha = 1;
 			_plugins[_currentSlide].connect();
 			
 			
@@ -328,7 +334,8 @@ package
 			
 			_plugins[_currentSlide].disconnect();
 			
-			if (_currentSlide >= _plugins.length - 2) {
+			
+			if (_currentSlide >= _plugins.length - 1) {
 				
 				_currentSlide = 0;
 				
@@ -344,17 +351,7 @@ package
 		
 		
 		
-		private function initClock():void {
-			
-			
-			
-			_plugins[_plugins.length - 1].alpha = 1;
-			_plugins[_plugins.length - 1].scaleX = _plugins[_plugins.length - 1].scaleY = .35;
-			_plugins[_plugins.length - 1].x = this.stage.stageWidth - 120;
-			_plugins[_plugins.length - 1].y = this.stage.stageHeight - 100;
-			
-			
-		}
+		
 		
 		
 		

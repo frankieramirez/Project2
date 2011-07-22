@@ -46,8 +46,8 @@ package
 			_timeDisplay.week_day.stop();
 			_timeDisplay.meridiem.stop();
 			addChild(_timeDisplay); 
-			_timeDisplay.x = 100;
-			_timeDisplay.y = _timeDisplay.height/2 + 50;
+			//_timeDisplay.x = 100;
+			//_timeDisplay.y = _timeDisplay.height/2 + 50;
 			var timer:Timer = new Timer(1000);
 			timer.addEventListener(TimerEvent.TIMER, updateTime);
 			timer.start();

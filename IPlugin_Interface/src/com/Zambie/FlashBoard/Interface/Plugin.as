@@ -12,7 +12,7 @@ package com.Zambie.FlashBoard.Interface
 	public class Plugin extends Sprite implements IPlugin
 	{
 		
-		private var _duration:uint = 1;
+		private var _duration:uint;
 		private var _fader:Fade; 
 		private var _timer:Timer;
 		private var _transitions:Array;
@@ -49,19 +49,20 @@ package com.Zambie.FlashBoard.Interface
 			
 			_fader = new Fade();
 			
-			this.alpha = 0;
+			this.alpha = 1;
 			
 		}
 		
 		public function connect():void {
 			
-			_fader.fadeIn(this, Number(_transitions["fadeIn"] / 100));
+			//_fader.fadeIn(this, Number(_transitions["fadeIn"] / 100));
+			this.alpha = 1;
 			
 			if (_timer) {
 				
-				_timer.removeEventListener(TimerEvent.TIMER, onTimeUp);
+				//_timer.removeEventListener(TimerEvent.TIMER, onTimeUp);
 				_timer.reset();
-				_timer.addEventListener(TimerEvent.TIMER, onTimeUp);
+				//_timer.addEventListener(TimerEvent.TIMER, onTimeUp);
 				_timer.start();
 				
 			} else {
@@ -85,7 +86,8 @@ package com.Zambie.FlashBoard.Interface
 		
 		public function disconnect():void {
 			
-			_fader.fadeOut(this, Number(_transitions["fadeOut"] / 100));
+			//_fader.fadeOut(this, Number(_transitions["fadeOut"] / 100));
+			this.alpha = 0;
 			
 			
 			
