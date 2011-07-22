@@ -17,6 +17,7 @@ package com.VO
 		
 		public var monthName:String;
 		public var dayName:String;
+		public var ampm:String;
 		
 		public function CalendarVO()
 		{

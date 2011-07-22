@@ -18,7 +18,7 @@ package com.views
 			
 			_calEvent = calEvent;
 			
-			tfUpcomingTime.text = _calEvent.time;
+			tfUpcomingTime.text = _calEvent.time + _calEvent.ampm;
 			tfUpcomingTitle.text = _calEvent.title;
 		}
 
