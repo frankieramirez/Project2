@@ -1,5 +1,7 @@
 package com.views
 {
+	import com.utils.TextExcerpt;
+	
 	import flash.display.Sprite;
 	
 	import libs.NewsViewBase;
@@ -22,7 +24,9 @@ package com.views
 		{
 			_newsEvents = value;
 			
-			tfTitle.text = _newsEvents[0].title;
+			TextExcerpt.setFixedText(tfTitle, _newsEvents[0].title, false);
+			
+			//tfTitle.text = _newsEvents[0].title;
 			tfSummary.text = _newsEvents[0].summary;
 			tfDate.text = _newsEvents[0].published;
 			
@@ -34,13 +38,7 @@ package com.views
 			
 			tfUpcomingTitle3.text = _newsEvents[3].title;
 			tfUpcomingDate3.text = _newsEvents[3].published;
-//			for(var i:int; i < _newsEvents.length; i++)
-//			{
-//				var ni:NewsViewItem = new NewsViewItem(_newsEvents[i]);
-//				ni.y += 30*i;
-//				addChild(ni);
-//				_displayedItems.push(ni);
-//			}
+
 		}
 
 	}

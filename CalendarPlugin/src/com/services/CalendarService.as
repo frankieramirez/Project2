@@ -62,6 +62,7 @@ package com.services
 				cvo.year = dateArray[0];
 				cvo.month = dateArray[1];
 				cvo.day = dateArray[2];
+				cvo.properDayName = properName(cvo.day);
 				
 				calendarSwitch(cvo.month);
 				cvo.monthName = _monthName;
@@ -94,6 +95,34 @@ package com.services
 				num1 -= 12;
 			}
 			return String(num1 +":"+ num2);
+		}
+		
+		private function properName(day:int):String
+		{
+			var properName:String;
+			switch(day)
+			{
+				case 2:
+					properName = '2nd';
+					break;
+				case 22:
+					properName = '22nd';
+					break;
+				case 21:
+					properName = '21st';
+					break;
+				case 31:
+					properName = '31st';
+					break;
+				case 3:
+					properName = '3rd';
+					break;
+				case 23:
+					properName = '23rd';
+					break;
+			}
+			
+			return properName;
 		}
 		
 		private function calendarSwitch(month:int):void
