@@ -14,6 +14,7 @@ package com.jworkman.Effects
 		private var _speed:Number;
 		private var _alpha:Number;
 		private var _fadeTo:Number;
+		public static const FADE_COMPLETE:String = "fade complete";
 		
 		public function Fade()
 		{
@@ -112,7 +113,7 @@ package com.jworkman.Effects
 		
 		private function dispatchCompleteEvent():void {
 			
-			var newEvt:Event = new Event("fade complete");
+			var newEvt:Event = new Event(FADE_COMPLETE);
 			dispatchEvent(newEvt);
 			
 		}

@@ -8,6 +8,7 @@ package
 	import flash.display.Bitmap;
 	import flash.display.Loader;
 	import flash.display.LoaderInfo;
+	import flash.display.NativeWindow;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageDisplayState;
@@ -24,6 +25,8 @@ package
 	import flash.utils.ByteArray;
 	import flash.utils.Timer;
 	import flash.utils.getDefinitionByName;
+	
+	import mx.core.Window;
 	
 	[SWF(width="1024", height="768", backgroundColor="0x000000")]
 	
@@ -75,9 +78,11 @@ package
 			_pluginList = {};
 			
 			//Setup background image
+			
 			this.stage.scaleMode = StageScaleMode.NO_SCALE;
 			this.stage.align = StageAlign.TOP_LEFT;
-			this.stage.displayState = StageDisplayState.FULL_SCREEN;
+			this.stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
+			
 			
 			_fader = new Fade;
 			_setupMenu = new ConfigurationDBox();
@@ -305,7 +310,7 @@ package
 		private function onPluginLoadComplete(e:Event):void {
 			var p:Plugin = e.currentTarget.content as Plugin;
 			
-			var pXML:XML = XML(_pluginList[p.fileName]);
+			var pXML:XML = XML(_pluginList[p.fileName].data);
 			
 			p.init(pXML);
 			
@@ -322,16 +327,12 @@ package
 			
 			
 			
-			
-			
-			
-			
 			_plugins.push(p);
 			
 			
 			onPluginLoaded();
 			
-			addChild(p);
+			//addChild(p);
 			
 			//trace("NumChildren : " , this.numChildren);
 		}
@@ -359,13 +360,14 @@ package
 			
 			
 				
-			
+			_fader.addEventListener(Fade.FADE_COMPLETE, onFadeComplete);
 				
 			_slideTimer = new Timer(4000);
 			
-			//_slideTimer.addEventListener(TimerEvent.TIMER, onSlideDone);
+			_slideTimer.addEventListener(TimerEvent.TIMER, onSlideDone);
 				
 			_plugins[_currentSlide].alpha = 1;
+			addChildAt(_plugins[_currentSlide], 0);
 				
 			_slideTimer.start();
 				
@@ -373,11 +375,10 @@ package
 			
 		}
 		
-		private function onSlideDone(e:TimerEvent):void {
-			
-			_slideTimer.reset();
+		private function onFadeComplete(e:Event):void {
 			
 			this.removeChild(_plugins[_currentSlide]);
+			_plugins[_currentSlide].alpha = 1;
 			
 			if (_currentSlide >= _plugins.length - 1) {
 				
@@ -392,8 +393,19 @@ package
 			
 			this.addChildAt(_plugins[_currentSlide], 0);
 			
+			
 			//_slideTimer.delay = Number(2000);
 			_slideTimer.start();
+			
+		}
+		
+		private function onSlideDone(e:TimerEvent):void {
+			trace("slide Done");
+			_slideTimer.reset();
+			
+			
+			_fader.fadeOut(_plugins[_currentSlide], .08);
+			
 			
 		}
 		

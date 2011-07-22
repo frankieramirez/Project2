@@ -11,14 +11,15 @@ package com.Zambie.FlashBoard.Interface
 		private var _obj:Sprite;
 		private var _speed:Number;
 		private var _alpha:Number;
+		public static const FADE_COMPLETE:String = "fade complete";
 		
-		public function Fade()
+		public function Fade() 
 		{
 			
 			
 			
 		}
-		
+		 
 		public function fadeOut(obj:Sprite, speed:Number):void {
 			_obj = obj;
 			_speed = speed;
@@ -87,7 +88,7 @@ package com.Zambie.FlashBoard.Interface
 		
 		private function dispatchCompleteEvent():void {
 			
-			var newEvt:Event = new Event("fade complete");
+			var newEvt:Event = new Event(FADE_COMPLETE);
 			dispatchEvent(newEvt);
 			
 		}
