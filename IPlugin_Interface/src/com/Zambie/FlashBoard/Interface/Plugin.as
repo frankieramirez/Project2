@@ -9,7 +9,7 @@ package com.Zambie.FlashBoard.Interface
 	import flash.utils.ByteArray;
 	import flash.utils.Timer;
 	
-	public class Plugin extends Sprite implements IPlugin
+	public class Plugin extends Sprite 
 	{
 		
 		private var _duration:uint;
@@ -53,27 +53,7 @@ package com.Zambie.FlashBoard.Interface
 			
 		}
 		
-		public function connect():void {
-			
-			//_fader.fadeIn(this, Number(_transitions["fadeIn"] / 100));
-			this.alpha = 1;
-			
-			if (_timer) {
-				
-				//_timer.removeEventListener(TimerEvent.TIMER, onTimeUp);
-				_timer.reset();
-				//_timer.addEventListener(TimerEvent.TIMER, onTimeUp);
-				_timer.start();
-				
-			} else {
-				
-				_timer = new Timer(_duration * 1000);
-				_timer.addEventListener(TimerEvent.TIMER, onTimeUp);
-				_timer.start();
-				
-			}
-			
-		}
+		
 		
 		private function onTimeUp(e:TimerEvent):void {
 			
@@ -84,20 +64,14 @@ package com.Zambie.FlashBoard.Interface
 		}
 		
 		
-		public function disconnect():void {
-			
-			//_fader.fadeOut(this, Number(_transitions["fadeOut"] / 100));
-			this.alpha = 0;
-			
-			
-			
-			
-		}
+		
 		
 		public function init(xmlData:XML):void {
 			
 			
 			throw new Error('your plugin must override the init function');
+			
+			
 		}
 		
 		

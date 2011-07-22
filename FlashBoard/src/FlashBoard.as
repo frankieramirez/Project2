@@ -51,14 +51,17 @@ package
 		private var _plugins:Array = [];
 		private var _pluginXML:Array = [];
 		private var _pluginConfigurations:Array = [];
-		private var pluginList:Object;
+		private var _pluginList:Object;
 		private var _numPlugins:int = 0;
+		private var _currentLoad:int = 0;
 		
 		//Fade & Effects settings
 		private var _fader:Fade;
 		private var _transitions:Array;
 		
 		private var _background:Bitmap;
+		
+		public static const PLUGIN_LOADED:String = "plugin loaded";
 		
 		
 		public function FlashBoard()
@@ -69,7 +72,7 @@ package
 		}
 		
 		private function startUpUI():void {
-			pluginList = {};
+			_pluginList = {};
 			
 			//Setup background image
 			this.stage.scaleMode = StageScaleMode.NO_SCALE;
@@ -105,6 +108,8 @@ package
 			
 			//This section is for rather loading a local .xml, or remote
 			_xmlFileMode = _setupMenu.getFileMode();
+			
+			trace("XMLFileMode = " , _xmlFileMode);
 			
 			if (_xmlFileMode == "local" && _setupMenu.filePath) {
 				
@@ -149,7 +154,7 @@ package
 		private function onXMLLoaded(e:Event):void {
 			
 			_xmlData = XML(e.currentTarget.data);
-			loadBackground();
+			//loadBackground();
 			_defaultSlideTime = uint(_xmlData.configuration.slides.time);
 			_pluginsDir = String(_xmlData.plugins.@directory);
 			_transitions = [];
@@ -176,7 +181,15 @@ package
 			var str:String = fs.readUTFBytes(fs.bytesAvailable);
 			fs.close();
 			_xmlData = XML(str);
-			loadBackground();
+			
+			for each(var i:XML in _xmlData.plugins.plugin) {
+				
+				_numPlugins++;
+				
+			}
+			trace(_numPlugins  + " plugins found in the config file");
+			
+			//loadBackground();
 			
 			_defaultSlideTime = uint(_xmlData.configuration.slides.time);
 			_pluginsDir = String(_xmlData.plugins.@directory);
@@ -196,6 +209,9 @@ package
 			
 		}
 		
+		
+		
+		/*
 		private function loadBackground():void {
 			
 			var ld:Loader = new Loader();
@@ -204,6 +220,7 @@ package
 			ld.load(ur);
 			
 		}
+		
 		
 		private function onBackgroundLoad(e:Event):void {
 			
@@ -217,13 +234,15 @@ package
 			_background.scaleY = .85;
 			_background.x -= 150;
 			
-		}
+		}*/
 		
 		private function loadPlugins():void {
 			
 			
+			loadPlugin(_currentLoad);
 			
-			for each(var pluginNode:XML in _xmlData.plugins.plugin) {
+			
+			/*for each(var pluginNode:XML in _xmlData.plugins.plugin) {
 				//var file:File = File.desktopDirectory;
 				var file:File = File.desktopDirectory.resolvePath(pluginNode.filename);
 			
@@ -251,8 +270,131 @@ package
 			
 			this.addEventListener(Event.ENTER_FRAME, checkLoad);
 			
+			*/
+			
 		}
 		
+		private function loadPlugin(loadNum:int):void {
+			trace("LoadNum: " , loadNum);
+			trace(_xmlData.plugins.plugin[loadNum].filepath);
+			//var file:File = File.desktopDirectory.resolvePath(
+			var file:File = new File(_xmlData.plugins.plugin[loadNum].filepath);
+			//file.resolvePath(_xmlData.plugins.plugin[loadNum].filepath);
+			
+			_pluginList[_xmlData.plugins.plugin[loadNum].filename] = _xmlData.plugins.plugin[loadNum];
+			//file.resolvePath(pluginNode.filename);
+			
+			trace("FILE PATH:",file.nativePath);
+			var fs:FileStream = new FileStream();
+			fs.open(file, FileMode.READ);
+			var ba:ByteArray = new ByteArray();
+			
+			fs.readBytes(ba);
+			fs.close();
+			
+			var loaderContext:LoaderContext = new LoaderContext();
+			loaderContext.allowLoadBytesCodeExecution = true;
+			
+			var l:Loader = new Loader();
+			l.loadBytes(ba,loaderContext);
+			l.contentLoaderInfo.addEventListener(Event.COMPLETE, onPluginLoadComplete);
+			
+			
+		}
+		
+		private function onPluginLoadComplete(e:Event):void {
+			var p:Plugin = e.currentTarget.content as Plugin;
+			
+			var pXML:XML = XML(_pluginList[p.fileName]);
+			
+			if (String(pXML.duration) == "default") {
+				
+				p.duration = _defaultSlideTime;
+				
+			} else {
+				
+				p.duration = uint(pXML.duration);
+				
+			}
+			
+			
+			
+			
+			
+			
+			
+			
+			_plugins.push(p);
+			
+			
+			onPluginLoaded();
+			
+			addChild(p);
+			
+			//trace("NumChildren : " , this.numChildren);
+		}
+		
+		private function onPluginLoaded():void {
+			
+			if (!_slideStarted) {
+				
+				_slideStarted = true;
+				startSlideShow();
+				
+			}
+			//trace("1");
+			if (_currentLoad < _numPlugins-1) {
+				
+				_currentLoad++;
+				loadPlugin(_currentLoad);
+				
+			}
+			
+			
+		}
+		
+		private function startSlideShow():void {
+			
+			
+				
+			
+				
+			_slideTimer = new Timer(4000);
+			
+			_slideTimer.addEventListener(TimerEvent.TIMER, onSlideDone);
+				
+			_plugins[_currentSlide].alpha = 1;
+				
+			_slideTimer.start();
+				
+			
+			
+		}
+		
+		private function onSlideDone(e:TimerEvent):void {
+			
+			_slideTimer.reset();
+			
+			_plugins[_currentSlide].alpha = 0;
+			
+			if (_currentSlide >= _plugins.length - 1) {
+				
+				_currentSlide = 0;
+				
+			} else {
+				
+				_currentSlide++;
+				
+			}
+			
+			_plugins[_currentSlide].alpha = 1;
+			
+			//_slideTimer.delay = Number(2000);
+			_slideTimer.start();
+			
+		}
+		
+		/*
 		private function checkLoad(e:Event):void {
 			
 			if (_plugins.length >= _numPlugins) {
@@ -261,7 +403,9 @@ package
 				initSlideShow();
 			} 
 			
-		}
+		}*/
+		
+		/*
 		
 		private function onPluginLoadComplete(e:Event):void {
 			
@@ -312,7 +456,9 @@ package
 			
 			
 			
-		}
+		}*/
+		
+		/*
 		
 		private function initSlideShow():void {
 			
@@ -328,7 +474,9 @@ package
 			
 			
 			
-		}
+		}*/
+		
+		/*
 		
 		private function onSlideDone(e:Event):void {
 			
@@ -347,7 +495,7 @@ package
 			
 			_plugins[_currentSlide].connect();
 			
-		}
+		}*/
 		
 		
 		
