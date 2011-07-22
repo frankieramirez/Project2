@@ -8,7 +8,9 @@ package com.views
 	{
 		private var _calEvents:Array = [];
 		private var _displayedItems:Array = [];
-		
+		//if(stage.stageWidth/stage.stageHeight<1.5)
+		//original
+		//else 16x9
 		public function CalendarView()
 		{
 			super();
@@ -18,23 +20,41 @@ package com.views
 		{
 			_calEvents = value;
 			
-			for(var i:int; i < 3; i++)
+			var todayNum:Date = new Date();
+			var relDays:Array = [];
+			
+			for(var z:int; z < _calEvents.length; z++)
 			{
-				var cvd:CalendarViewDetail = new CalendarViewDetail(_calEvents[i]);
-				cvd.y += (cvd.height*i) + 100;
+				if(_calEvents[z].day >= todayNum.date && _calEvents[z].month >= todayNum.month)
+				{
+					relDays.push(_calEvents[z]);
+				}
+			}
+			
+			//trace(relDays[relDays.length-1].title);
+			var calviewbase1:CalendarViewDetailBaseFirst = new CalendarViewDetailBaseFirst(relDays[relDays.length-1]);
+			calviewbase1.y = 75;
+			
+			
+			var downNum:int = relDays.length - 1;
+			for(var d:int; d < 3; d++)
+			{
+				downNum--;
+				var cvd:CalendarViewDetail = new CalendarViewDetail(relDays[downNum]);
+				cvd.y = (cvd.height*d) + (calviewbase1.y + calviewbase1.height);
 				addChild(cvd);
-				_displayedItems.push(cvd);
 			}
+			addChild(calviewbase1);
 			
-			for(var j:int = 3; j < _calEvents.length; j++)
+			for(var j:int; j < downNum; j++)
 			{
-				var cvu:CalendarViewUpcoming = new CalendarViewUpcoming(_calEvents[j]);
-				cvu.x = cvd.width + 20;
-				cvu.y = (cvu.height*j);
+				downNum--;
+				var cvu:CalendarViewUpcoming = new CalendarViewUpcoming(relDays[downNum]);
+				cvu.y = (cvu.height*j) + 75;
+				cvu.x = cvd.width + 30;
 				addChild(cvu);
-				_displayedItems.push(cvd);
 			}
-			
+		
 		}
 
 	}
