@@ -1,20 +1,19 @@
 package
 {
+	import com.Zambie.FlashBoard.Interface.Plugin;
 	import com.events.NewsServiceEvent;
 	import com.services.NewsService;
 	import com.views.NewsView;
 	
 	import flash.display.Sprite;
- 
-	[SWF(width="1200", height="1024")]
+ 	[SWF(width="1200", height="1200")]
 	public class NewsPlugin extends Sprite
 	{
 		private var _newsVw:NewsView;
-		private var _type:String;
-		private var _slideDuration:Number;
 		
 		public function NewsPlugin()
 		{
+			//this.fileName = "NewsPlugin.swf";	
 			init();
 		}
 		
@@ -33,27 +32,6 @@ package
 		{
 			_newsVw.newsEvents = e.newsEvents;  
 		}
-		
-		public function get type():String
-		{
-			return _type;
-		}
-		
-		public function get slideDuration():Number
-		{
-			return _slideDuration;
-		}
-
-		public function set type(value:String):void
-		{
-			_type = value;
-		}
-
-		public function set slideDuration(value:Number):void
-		{
-			_slideDuration = value;
-		}
-
 
 	}
 }

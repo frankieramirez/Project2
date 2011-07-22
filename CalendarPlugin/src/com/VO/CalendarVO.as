@@ -15,6 +15,7 @@ package com.VO
 		public var day:int;
 		public var time:String;
 		
+		public var properDayName:String;
 		public var monthName:String;
 		public var dayName:String;
 		public var ampm:String;
