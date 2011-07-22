@@ -55,13 +55,13 @@ package com.Zambie.FlashBoard.Interface
 		
 		
 		
-		private function onTimeUp(e:TimerEvent):void {
+		/*private function onTimeUp(e:TimerEvent):void {
 			
 			_timer.stop();
 			var evt:Event = new Event(TIME_DONE);
 			this.dispatchEvent(evt);
 			
-		}
+		}*/
 		
 		
 		

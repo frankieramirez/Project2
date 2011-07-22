@@ -307,6 +307,8 @@ package
 			
 			var pXML:XML = XML(_pluginList[p.fileName]);
 			
+			p.init(pXML);
+			
 			if (String(pXML.duration) == "default") {
 				
 				p.duration = _defaultSlideTime;
@@ -343,7 +345,7 @@ package
 				
 			}
 			//trace("1");
-			if (_currentLoad < _numPlugins-1) {
+			if (_currentLoad < _numPlugins - 1) {
 				
 				_currentLoad++;
 				loadPlugin(_currentLoad);
@@ -361,7 +363,7 @@ package
 				
 			_slideTimer = new Timer(4000);
 			
-			_slideTimer.addEventListener(TimerEvent.TIMER, onSlideDone);
+			//_slideTimer.addEventListener(TimerEvent.TIMER, onSlideDone);
 				
 			_plugins[_currentSlide].alpha = 1;
 				
@@ -375,7 +377,7 @@ package
 			
 			_slideTimer.reset();
 			
-			_plugins[_currentSlide].alpha = 0;
+			this.removeChild(_plugins[_currentSlide]);
 			
 			if (_currentSlide >= _plugins.length - 1) {
 				
@@ -387,7 +389,8 @@ package
 				
 			}
 			
-			_plugins[_currentSlide].alpha = 1;
+			
+			this.addChildAt(_plugins[_currentSlide], 0);
 			
 			//_slideTimer.delay = Number(2000);
 			_slideTimer.start();
