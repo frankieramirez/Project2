@@ -1,6 +1,7 @@
 package
 {
-	import com.Zambie.FlashBoard.Interfaces.IPlugin;
+	
+	import com.Zambie.FlashBoard.Interface.Plugin;
 	
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -11,7 +12,7 @@ package
 	
 	import org.osmf.events.TimeEvent;
 	
-	public class TimeOverlay extends Sprite implements IPlugin
+	public class TimeOverlay extends Plugin
 	{
 		
 		private var _date:Date;
@@ -25,29 +26,19 @@ package
 		
 		public function TimeOverlay()
 		{
-			
-			
-			
-		}
-		
-		public function connect():void {
-			
-			var shape:Sprite = new Sprite();
-			addChild(shape);
-			shape.graphics.beginFill(0xffffff);
-			shape.graphics.drawRect(0, 0, this.width, this.height);
-			shape.graphics.endFill();
+			this.fileName = "TimeOverlay.swf";
 			
 			
 		}
 		
-		public function disconnect():void {
-			
-			
-			
+		public function get timeDisplay():TimeOverlayBase
+		{
+			return _timeDisplay;
 		}
+
 		
-		public function init(xmlData:XML):void {
+		
+		override public function init(xmlData:XML):void {
 			
 			
 			
@@ -176,6 +167,8 @@ package
 			return str;
 			
 		}
+		
+		
 		
 		
 		
