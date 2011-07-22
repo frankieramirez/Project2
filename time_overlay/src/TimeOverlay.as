@@ -27,7 +27,7 @@ package
 		public function TimeOverlay()
 		{
 			this.fileName = "TimeOverlay.swf";
-			trace(this.width);
+			
 			
 		}
 		
