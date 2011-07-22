@@ -14,6 +14,7 @@ package com.views
 		public function CalendarView()
 		{
 			super();
+
 		}
 
 		public function set calEvents(value:Array):void
@@ -46,13 +47,33 @@ package com.views
 			}
 			addChild(calviewbase1);
 			
+			var cTitle:String;
+			var startUpcomingNum:int = downNum;
+			var yPos:int;
 			for(var j:int; j < downNum; j++)
 			{
 				downNum--;
-				var cvu:CalendarViewUpcoming = new CalendarViewUpcoming(relDays[downNum]);
-				cvu.y = (cvu.height*j) + 75;
-				cvu.x = cvd.width + 30;
-				addChild(cvu);
+				cTitle = relDays[downNum].dayName;
+				if(startUpcomingNum == downNum+1)
+				{
+					var cvt:CalendarViewUpcomingTitle = new CalendarViewUpcomingTitle();
+					cvt.title = relDays[downNum];
+					//var dt4t:Date = new Date(relDays[downNum].year, relDays[downNum].month-1, relDays[downNum].day);
+					
+					//cvt.title = cTitle;
+					cvt.y = (cvt.height*j)+75;
+					cvt.x = cvd.width + 30;
+					yPos += cvt.y + cvt.height;
+					addChild(cvt);
+				}if(cTitle == relDays[downNum].dayName)
+				{
+					var cvu:CalendarViewUpcoming = new CalendarViewUpcoming(relDays[downNum]);
+					cvu.y = (cvu.height*j) + yPos;
+					cvu.x = cvd.width + 30;
+					yPos += cvu.y;
+					addChild(cvu);
+				}
+				
 			}
 		
 		}

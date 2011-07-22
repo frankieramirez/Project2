@@ -24,7 +24,6 @@ package com.views
 
 		private function updateText():void
 		{
-			trace(_calEvent.dayName);
 			tfEventTitle.text = _calEvent.title;
 			tfDay.text = String(_calEvent.day);
 			tfMonth.text = _calEvent.monthName;

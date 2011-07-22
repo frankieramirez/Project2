@@ -15,6 +15,7 @@ package com.services
 		private var _calendarEvents:Array = [];
 		private var _monthName:String;
 		private var _dayArrayNames:Array;
+		private var _ampm:String = "am";
 		
 		public function CalendarService()
 		{
@@ -51,7 +52,10 @@ package com.services
 				var timeSt:String = dateArray[1];
 				var timeArray:Array = timeSt.split(".");
 				timeSt = timeArray[0].toString();
-				cvo.time = timeSt;
+				timeArray = timeSt.split(":");
+				timeSt = timeArray[0] + ":" + timeArray[1];
+				cvo.time = convertTime(timeSt);
+				cvo.ampm = _ampm;
 				cvo.date = dateArray[0];
 				var dt:String = dateArray[0];
 				dateArray = dt.split("-");
@@ -76,6 +80,20 @@ package com.services
 		private function onLoadFail(e:IOErrorEvent):void
 		{
 			
+		}
+		
+		private function convertTime(_t:String):String
+		{
+			var aray:Array = _t.split(":");
+			
+			var num1:int = int(aray[0]);
+			var num2:String = aray[1];
+			if(num1 > 12)
+			{
+				_ampm = "pm";
+				num1 -= 12;
+			}
+			return String(num1 +":"+ num2);
 		}
 		
 		private function calendarSwitch(month:int):void
