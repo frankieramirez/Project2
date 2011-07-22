@@ -9,7 +9,7 @@ package com.Zambie.FlashBoard.Interface
 	import flash.utils.ByteArray;
 	import flash.utils.Timer;
 	
-	public class Plugin extends Sprite
+	public class Plugin extends Sprite implements IPlugin
 	{
 		
 		private var _duration:uint = 1;
@@ -17,11 +17,33 @@ package com.Zambie.FlashBoard.Interface
 		private var _timer:Timer;
 		public static const TIME_DONE:String = "Time over";
 		
-		public var fileName:String;
+		private var _fileName:String;
 		
+		public function set duration(value:uint):void
+		{
+			_duration = value;
+		}
+
+		public function set fileName(str:String):void
+		{
+			_fileName = str;
+		}
+
+		public function get fileName():String
+		{
+			return _fileName;
+		}
+
+		public function get duration():uint
+		{
+			return _duration;
+		}
+
 		public function Plugin():void {
 			
+			_fader = new Fade();
 			
+			this.alpha = 0;
 			
 		}
 		
@@ -40,6 +62,7 @@ package com.Zambie.FlashBoard.Interface
 				
 				_timer = new Timer(_duration * 1000);
 				_timer.addEventListener(TimerEvent.TIMER, onTimeUp);
+				_timer.start();
 				
 			}
 			

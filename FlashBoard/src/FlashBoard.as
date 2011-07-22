@@ -1,5 +1,6 @@
 package
 {
+	import com.Zambie.FlashBoard.Interface.IPlugin;
 	import com.Zambie.FlashBoard.Interface.Plugin;
 	import com.Zambie.FlashBoard.UI.ConfigurationDBox;
 	import com.jworkman.Effects.Fade;
@@ -7,6 +8,7 @@ package
 	import flash.display.Loader;
 	import flash.display.LoaderInfo;
 	import flash.display.Sprite;
+	import flash.display.StageDisplayState;
 	import flash.events.Event;
 	import flash.events.TimerEvent;
 	import flash.filesystem.File;
@@ -33,11 +35,13 @@ package
 		private var _fader:Fade;
 		private var _currentSlide:int = 0;
 		
-		private var _plugins:Array =[];
+		private var _plugins:Array = [];
 		private var _pluginXML:Array = [];
 		private var _pluginConfigurations:Array = [];
 		
 		private var pluginList:Object;
+		private var _slideStarted:Boolean = false;
+		private var _numPlugins:int = 0;
 		
 		public function FlashBoard()
 		{
@@ -48,6 +52,9 @@ package
 		
 		private function startUpUI():void {
 			pluginList = {};
+			
+			//Setup background image
+			this.stage.displayState = StageDisplayState.FULL_SCREEN;
 			
 			
 			_setupMenu = new ConfigurationDBox();
@@ -94,6 +101,9 @@ package
 		}
 		
 		private function loadPlugins():void {
+			
+			
+			
 			for each(var pluginNode:XML in _xmlData.plugins.plugin) {
 				//var file:File = File.desktopDirectory;
 				var file:File = File.desktopDirectory.resolvePath(pluginNode.filename);
@@ -115,9 +125,22 @@ package
 				var l:Loader = new Loader();
 				l.loadBytes(ba,loaderContext);
 				l.contentLoaderInfo.addEventListener(Event.COMPLETE, onPluginLoadComplete);
+				_numPlugins++;
 			}
 			
-			initSlideShow();
+			
+			
+			this.addEventListener(Event.ENTER_FRAME, checkLoad);
+			
+		}
+		
+		private function checkLoad(e:Event):void {
+			
+			if (_plugins.length >= _numPlugins) {
+				trace(_plugins.length);
+				this.removeEventListener(Event.ENTER_FRAME, checkLoad);
+				initSlideShow();
+			} 
 			
 		}
 		
@@ -125,15 +148,27 @@ package
 			
 			var plugin:Plugin = e.currentTarget.content as Plugin;
 			
+			_plugins.push(plugin);
+			
 			
 			
 			var pluginXML:XML = XML(pluginList[plugin.fileName].data);
 			
-			trace(pluginXML);
+			//trace(plugin.alpha);
 			
 			plugin.init(pluginXML);
 			
-			_plugins.push(plugin);
+			if (String(XML(pluginList[plugin.fileName].duration)) == "") {
+				
+				plugin.duration = _defaultSlideTime;
+				
+			} else {
+				
+				plugin.duration = uint(XML(pluginList[plugin.fileName].duration));
+				
+			}
+			
+			
 			
 			addChild(plugin);
 			
@@ -144,23 +179,22 @@ package
 		
 		private function initSlideShow():void {
 			
+			
 			for each(var plugin:Plugin in _plugins) {
 				
 				plugin.addEventListener(Plugin.TIME_DONE, onSlideDone);
 				
 			}
 			
-			onSlideDone(new Event(Plugin.TIME_DONE));
+			_plugins[_currentSlide].connect();
+			
+			
 			
 		}
 		
 		private function onSlideDone(e:Event):void {
-			trace("hi");
 			
-			if(_plugins[_currentSlide])
-			{
-				(_plugins[_currentSlide] as Plugin).disconnect();
-			}
+			_plugins[_currentSlide].disconnect();
 			
 			if (_currentSlide >= _plugins.length - 1) {
 				
@@ -172,10 +206,7 @@ package
 				
 			}
 			
-			if(_plugins[_currentSlide])
-			{
-				(_plugins[_currentSlide] as Plugin).connect();
-			}
+			_plugins[_currentSlide].connect();
 			
 		}
 		
