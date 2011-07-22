@@ -26,8 +26,8 @@ package
 		
 		public function TimeOverlay()
 		{
-			this.fileName = "TimeOverlay.swf";
-			trace(this.width);
+			this.fileName = "TimeOverlay2.swf";
+			
 			
 		}
 		
@@ -63,6 +63,12 @@ package
 			if (hours > 12) {
 				
 				hours = hours - 12;
+				
+				
+				
+			} else if (hours == 0) {
+				
+				hours = 12;
 				
 			}
 			

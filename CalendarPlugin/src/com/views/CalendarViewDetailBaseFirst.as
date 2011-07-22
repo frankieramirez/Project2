@@ -2,26 +2,24 @@ package com.views
 {
 	import com.VO.CalendarVO;
 	
-	import flash.display.Sprite;
-	import flash.geom.Rectangle;
 	import flash.text.TextField;
 	
-	import libs.CalendarViewDetailBase;
+	import libs.CalendarViewDetailBaseFirst;
 	
-	public class CalendarViewDetail extends CalendarViewDetailBase
+	public class CalendarViewDetailBaseFirst extends libs.CalendarViewDetailBaseFirst
 	{
 		private var _calEvent:CalendarVO;
 		private var _tf:TextField;
 		
-		public function CalendarViewDetail(calEvent:CalendarVO)
+		public function CalendarViewDetailBaseFirst(calEvent:CalendarVO)
 		{
 			super();
 			
 			_calEvent = calEvent;
-
+			
 			updateText();
 		}
-
+		
 		private function updateText():void
 		{
 			tfEventTitle.text = _calEvent.title;
@@ -37,6 +35,5 @@ package com.views
 			_calEvent = value;
 			updateText();
 		}
-
 	}
 }

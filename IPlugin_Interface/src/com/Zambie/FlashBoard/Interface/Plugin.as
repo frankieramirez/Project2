@@ -9,25 +9,53 @@ package com.Zambie.FlashBoard.Interface
 	import flash.utils.ByteArray;
 	import flash.utils.Timer;
 	
-	public class Plugin extends Sprite
+	public class Plugin extends Sprite implements IPlugin
 	{
 		
 		private var _duration:uint = 1;
 		private var _fader:Fade; 
 		private var _timer:Timer;
+		private var _transitions:Array;
 		public static const TIME_DONE:String = "Time over";
 		
-		public var fileName:String;
+		private var _fileName:String;
 		
+		public function set transitions(value:Array):void
+		{
+			_transitions = value;
+		}
+
+		public function set duration(value:uint):void
+		{
+			_duration = value;
+		}
+
+		public function set fileName(str:String):void
+		{
+			_fileName = str;
+		}
+
+		public function get fileName():String
+		{
+			return _fileName;
+		}
+
+		public function get duration():uint
+		{
+			return _duration;
+		}
+
 		public function Plugin():void {
 			
+			_fader = new Fade();
 			
+			this.alpha = 0;
 			
 		}
 		
 		public function connect():void {
 			
-			_fader.fadeIn(this, .05);
+			_fader.fadeIn(this, Number(_transitions["fadeIn"] / 100));
 			
 			if (_timer) {
 				
@@ -40,6 +68,7 @@ package com.Zambie.FlashBoard.Interface
 				
 				_timer = new Timer(_duration * 1000);
 				_timer.addEventListener(TimerEvent.TIMER, onTimeUp);
+				_timer.start();
 				
 			}
 			
@@ -56,7 +85,8 @@ package com.Zambie.FlashBoard.Interface
 		
 		public function disconnect():void {
 			
-			_fader.fadeOut(this, .08);
+			_fader.fadeOut(this, Number(_transitions["fadeOut"] / 100));
+			
 			
 			
 			
