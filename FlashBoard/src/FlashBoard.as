@@ -391,10 +391,11 @@ package
 			}
 			
 			
+			
 			p.x = _regX;
 			p.y = _regY;
 			
-			
+			//trace("Width of Plugin" + p.width);
 			
 			_plugins.push(p);
 			
@@ -461,6 +462,8 @@ package
 			
 			
 			this.addChild(_plugins[_currentSlide]);
+			_plugins[_currentSlide].width = PLUGIN_RATIO_X * this.stage.stageWidth;
+			_plugins[_currentSlide].height = PLUGIN_RATIO_Y * this.stage.stageHeight;
 			
 			
 			//_slideTimer.delay = Number(2000);
