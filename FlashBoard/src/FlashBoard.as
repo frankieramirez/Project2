@@ -68,12 +68,14 @@ package
 		
 		//Window & Stage related vars
 		private var _background:Bitmap;
-		private var _regX:Number = 150;
-		private var _regY:Number = 150;
+		private var _regX:Number = 75;
+		private var _regY:Number = 50;
 		private var _pluginWidth:Number;
 		private var _pluginHeight:Number;
 		private var _aspectRatio:Number;
 		private var _aspectRatioStr:String;
+		private const PLUGIN_RATIO_X:Number = .9;
+		private const PLUGIN_RATIO_Y:Number = .88;
 		
 		public static const PLUGIN_LOADED:String = "plugin loaded";
 		
@@ -388,6 +390,9 @@ package
 				
 			}
 			
+			
+			p.x = _regX;
+			p.y = _regY;
 			
 			
 			
