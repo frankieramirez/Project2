@@ -75,7 +75,7 @@ package
 		private var _aspectRatio:Number;
 		private var _aspectRatioStr:String;
 		private const PLUGIN_RATIO_X:Number = .9;
-		private const PLUGIN_RATIO_Y:Number = .88;
+		private const PLUGIN_RATIO_Y:Number = .85;
 		
 		public static const PLUGIN_LOADED:String = "plugin loaded";
 		
@@ -249,6 +249,7 @@ package
 			loadBackground();
 			
 			_defaultSlideTime = uint(_xmlData.configuration.slides.time);
+			
 			_pluginsDir = String(_xmlData.plugins.@directory);
 			_transitions = [];
 			
@@ -346,8 +347,8 @@ package
 		}
 		
 		private function loadPlugin(loadNum:int):void {
-			trace("LoadPlugin #" , loadNum);
-			trace(_xmlData.plugins.plugin[loadNum].filepath);
+			//trace("LoadPlugin #" , loadNum);
+			//trace(_xmlData.plugins.plugin[loadNum].filepath);
 			//var file:File = File.desktopDirectory.resolvePath(
 			var file:File = new File(_xmlData.plugins.plugin[loadNum].filepath);
 			//file.resolvePath(_xmlData.plugins.plugin[loadNum].filepath);
@@ -355,7 +356,7 @@ package
 			_pluginList[_xmlData.plugins.plugin[loadNum].filename] = _xmlData.plugins.plugin[loadNum];
 			//file.resolvePath(pluginNode.filename);
 			
-			trace("FILE PATH:",file.nativePath);
+			//trace("FILE PATH:",file.nativePath);
 			var fs:FileStream = new FileStream();
 			fs.open(file, FileMode.READ);
 			var ba:ByteArray = new ByteArray();
@@ -376,19 +377,18 @@ package
 		private function onPluginLoadComplete(e:Event):void {
 			var p:Plugin = e.currentTarget.content as Plugin;
 			
+			//p.duration = uint(_defaultSlideTime);
+			
+			
 			var pXML:XML = XML(_pluginList[p.fileName].data);
+			
+			p.duration = _defaultSlideTime;
+			
+			trace("plugin duration of " + p.duration + " While default duration = " + _defaultSlideTime);
 			
 			p.init(pXML);
 			
-			if (String(pXML.duration) == "default") {
-				
-				p.duration = _defaultSlideTime;
-				
-			} else {
-				
-				p.duration = uint(pXML.duration);
-				
-			}
+			
 			
 			
 			
@@ -432,13 +432,19 @@ package
 				
 			_fader.addEventListener(Fade.FADE_COMPLETE, onFadeComplete);
 				
-			_slideTimer = new Timer(4000);
+			_slideTimer = new Timer(3000);
 			
 			_slideTimer.addEventListener(TimerEvent.TIMER, onSlideDone);
 				
 			_plugins[_currentSlide].alpha = 1;
 			addChild(_plugins[_currentSlide]);
-				
+			_plugins[_currentSlide].width = PLUGIN_RATIO_X * this.stage.stageWidth;
+			_plugins[_currentSlide].height = PLUGIN_RATIO_Y * this.stage.stageHeight;
+			
+			trace("Duration : " + _plugins[_currentSlide].duration);
+			
+			//_slideTimer.delay = _plugins[_currentSlide].duration * 1000;
+			
 			_slideTimer.start();
 				
 			
@@ -465,14 +471,15 @@ package
 			_plugins[_currentSlide].width = PLUGIN_RATIO_X * this.stage.stageWidth;
 			_plugins[_currentSlide].height = PLUGIN_RATIO_Y * this.stage.stageHeight;
 			
+			//trace("Slide #" + _currentSlide + " has a duration of " + _plugins[_currentSlide].duration);
+			_slideTimer.delay = Number(_plugins[_currentSlide].duration * 1000);
 			
-			//_slideTimer.delay = Number(2000);
 			_slideTimer.start();
 			
 		}
 		
 		private function onSlideDone(e:TimerEvent):void {
-			trace("slide Done");
+			//trace("slide Done");
 			_slideTimer.reset();
 			
 			
