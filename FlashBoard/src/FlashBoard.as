@@ -9,6 +9,8 @@ package
 	import flash.display.Loader;
 	import flash.display.LoaderInfo;
 	import flash.display.NativeWindow;
+	import flash.display.NativeWindowInitOptions;
+	import flash.display.NativeWindowSystemChrome;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageDisplayState;
@@ -21,6 +23,7 @@ package
 	import flash.net.FileFilter;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
+	import flash.system.Capabilities;
 	import flash.system.LoaderContext;
 	import flash.utils.ByteArray;
 	import flash.utils.Timer;
@@ -28,7 +31,7 @@ package
 	
 	import mx.core.Window;
 	
-	[SWF(width="1024", height="768", backgroundColor="0x000000")]
+	[SWF(backgroundColor="0x000000")]
 	
 	public class FlashBoard extends Sprite
 	{
@@ -58,11 +61,19 @@ package
 		private var _numPlugins:int = 0;
 		private var _currentLoad:int = 0;
 		
+		
 		//Fade & Effects settings
 		private var _fader:Fade;
 		private var _transitions:Array;
 		
+		//Window & Stage related vars
 		private var _background:Bitmap;
+		private var _regX:Number = 150;
+		private var _regY:Number = 150;
+		private var _pluginWidth:Number;
+		private var _pluginHeight:Number;
+		private var _aspectRatio:Number;
+		private var _aspectRatioStr:String;
 		
 		public static const PLUGIN_LOADED:String = "plugin loaded";
 		
@@ -70,14 +81,53 @@ package
 		public function FlashBoard()
 		{
 			
+			getScreenSize();
+			
 			startUpUI();
+			
+		}
+		
+		private function getScreenSize():void {
+			
+			/*var nativeX:Number = Capabilities.screenResolutionX - stage.nativeWindow.width;
+			var nativeWindowOptions:NativeWindowInitOptions = new NativeWindowInitOptions();
+			nativeWindowOptions.systemChrome = NativeWindowSystemChrome.NONE;
+			nativeWindowOptions.maximizable = true;
+			var tmpWindow:NativeWindow = new NativeWindow(nativeWindowOptions);
+			tmpWindow.maximize();
+			tmpWindow.height = Capabilities.screenResolutionY;
+			tmpWindow.width = Capabilities.screenResolutionX;
+			trace("Native window size : " + stage.nativeWindow.width);*/
+			
+			this.stage.nativeWindow.width = Capabilities.screenResolutionX;
+			this.stage.nativeWindow.height = Capabilities.screenResolutionY;
+			
+			this.stage.stageWidth = Capabilities.screenResolutionX;
+			this.stage.stageHeight = Capabilities.screenResolutionY;
+			
+			trace("Native Window : " + this.stage.nativeWindow.width + " X " + this.stage.nativeWindow.height);
+			trace("Screen : " + this.stage.stageWidth + " X " + this.stage.stageHeight);
+			
+			_aspectRatio = this.stage.nativeWindow.width / this.stage.nativeWindow.height;
+			
+			if (_aspectRatio <= 1.5) {
+				
+				_aspectRatioStr = "4x3";
+				
+			} else {
+				
+				_aspectRatioStr = "16x9";
+				
+			}
+			
+			trace("Aspect Ratio : " + _aspectRatioStr);
 			
 		}
 		
 		private function startUpUI():void {
 			_pluginList = {};
 			
-			//Setup background image
+		
 			
 			this.stage.scaleMode = StageScaleMode.NO_SCALE;
 			this.stage.align = StageAlign.TOP_LEFT;
@@ -194,7 +244,7 @@ package
 			}
 			trace(_numPlugins  + " plugins found in the config file");
 			
-			//loadBackground();
+			loadBackground();
 			
 			_defaultSlideTime = uint(_xmlData.configuration.slides.time);
 			_pluginsDir = String(_xmlData.plugins.@directory);
@@ -216,11 +266,21 @@ package
 		
 		
 		
-		/*
+		
 		private function loadBackground():void {
 			
 			var ld:Loader = new Loader();
-			var ur:URLRequest = new URLRequest(String(_xmlData.configuration.theme.background[0].url));
+			var ur:URLRequest = new URLRequest();
+			if (_aspectRatioStr == "16x9") {
+				
+				ur.url = String(_xmlData.configuration.theme.background[0].url);
+				
+			} else {
+				
+				ur.url = String(_xmlData.configuration.theme.background[1].url);
+				
+			}
+			
 			ld.contentLoaderInfo.addEventListener(Event.COMPLETE, onBackgroundLoad);
 			ld.load(ur);
 			
@@ -231,15 +291,19 @@ package
 			
 			_background = e.currentTarget.content as Bitmap;
 			
-			//this.addChildAt(_background, 0);
-			_fader.fadeInBitmap(_background, .015, Number(_xmlData.configuration.theme.background.opacity) / 100);
+			this.addChildAt(_background, 0);
+			_background.x = _background.y = 0;
+			
+			var fd:Fade = new Fade();
+			fd.fadeInBitmap(_background, .025, Number(_xmlData.configuration.theme.background.opacity) / 100);
 			
 			_background.smoothing = true;
-			_background.scaleX = .82;
-			_background.scaleY = .85;
-			_background.x -= 150;
 			
-		}*/
+			
+			_background.width = stage.stageWidth;
+			_background.height = stage.stageHeight;
+			
+		}
 		
 		private function loadPlugins():void {
 			
@@ -280,7 +344,7 @@ package
 		}
 		
 		private function loadPlugin(loadNum:int):void {
-			trace("LoadNum: " , loadNum);
+			trace("LoadPlugin #" , loadNum);
 			trace(_xmlData.plugins.plugin[loadNum].filepath);
 			//var file:File = File.desktopDirectory.resolvePath(
 			var file:File = new File(_xmlData.plugins.plugin[loadNum].filepath);
@@ -367,7 +431,7 @@ package
 			_slideTimer.addEventListener(TimerEvent.TIMER, onSlideDone);
 				
 			_plugins[_currentSlide].alpha = 1;
-			addChildAt(_plugins[_currentSlide], 0);
+			addChild(_plugins[_currentSlide]);
 				
 			_slideTimer.start();
 				
@@ -391,7 +455,7 @@ package
 			}
 			
 			
-			this.addChildAt(_plugins[_currentSlide], 0);
+			this.addChild(_plugins[_currentSlide]);
 			
 			
 			//_slideTimer.delay = Number(2000);
