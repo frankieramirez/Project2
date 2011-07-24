@@ -6,6 +6,7 @@ package
 	import com.jworkman.Effects.Fade;
 	
 	import flash.display.Bitmap;
+	import flash.display.DisplayObject;
 	import flash.display.Loader;
 	import flash.display.LoaderInfo;
 	import flash.display.NativeWindow;
@@ -51,6 +52,7 @@ package
 		private var _slideTimer:Timer;
 		private var _currentSlide:int = 0;
 		private var _slideStarted:Boolean = false;
+		private var _timeOverlay:DisplayObject;
 		
 		//Plugin related variables
 		private var _pluginsDir:String;
@@ -382,7 +384,13 @@ package
 			
 			var pXML:XML = XML(_pluginList[p.fileName].data);
 			
-			p.duration = _defaultSlideTime;
+			
+			
+			if (!p.duration) {
+				
+				p.duration = _defaultSlideTime;
+				
+			}
 			
 			trace("plugin duration of " + p.duration + " While default duration = " + _defaultSlideTime);
 			
@@ -431,30 +439,55 @@ package
 			
 				
 			_fader.addEventListener(Fade.FADE_COMPLETE, onFadeComplete);
-				
+			
 			_slideTimer = new Timer(3000);
 			
 			_slideTimer.addEventListener(TimerEvent.TIMER, onSlideDone);
-				
+			
 			_plugins[_currentSlide].alpha = 1;
-			addChild(_plugins[_currentSlide]);
+			
+			/*if (this.contains(_timeOverlay) && this.contains(_background)) {
+				
+				this.addChildAt(_plugins[_currentSlide], 1);
+				
+			} else if(this.contains(_background)) {
+				
+				this.addChildAt(_plugins[_currentSlide], 1);
+				
+			} else if (this.contains(_timeOverlay)) {
+				
+				this.addChildAt(_plugins[_currentSlide], 0);
+				
+			} else {
+				
+				this.addChild(_plugins[_currentSlide]);
+				
+			}*/
+			
+			this.addChild(_plugins[_currentSlide]);
+			
+			
 			_plugins[_currentSlide].width = PLUGIN_RATIO_X * this.stage.stageWidth;
 			_plugins[_currentSlide].height = PLUGIN_RATIO_Y * this.stage.stageHeight;
 			
-			trace("Duration : " + _plugins[_currentSlide].duration);
 			
-			//_slideTimer.delay = _plugins[_currentSlide].duration * 1000;
 			
 			_slideTimer.start();
-				
+			
 			
 			
 		}
 		
 		private function onFadeComplete(e:Event):void {
 			
+			
+				
 			this.removeChild(_plugins[_currentSlide]);
 			_plugins[_currentSlide].alpha = 1;
+				
+			
+			
+			
 			
 			if (_currentSlide >= _plugins.length - 1) {
 				
@@ -472,8 +505,8 @@ package
 			_plugins[_currentSlide].height = PLUGIN_RATIO_Y * this.stage.stageHeight;
 			
 			//trace("Slide #" + _currentSlide + " has a duration of " + _plugins[_currentSlide].duration);
-			_slideTimer.delay = Number(_plugins[_currentSlide].duration * 1000);
 			
+			_slideTimer.delay = Number(_plugins[_currentSlide].duration * 1000);
 			_slideTimer.start();
 			
 		}
