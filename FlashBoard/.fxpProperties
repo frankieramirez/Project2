@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<fxpProperties abbreviated="false" authoringTool="Flex Builder" compiles="true" parentProject="7e5b9276-3d4d-452d-b199-16ee91150041" projectUUID="7e5b9276-3d4d-452d-b199-16ee91150041" sdkVersion="4.0.0" uuid="389c49b1-f25b-4a16-89ab-c0b1c494dad3" version="4">
+  <projects>
+    <project filename="Reusable.fxpl" position="2" projectUUID="881e8e42-7378-4f97-b863-e90031185bb9" uuid="389c49b1-f25b-4a16-89ab-c0b1c494dad3"/>
+    <project filename="IPlugin_Interface.fxpl" position="3" projectUUID="cb4a23fb-46fe-4a65-acf5-e76e09a57b90" uuid="389c49b1-f25b-4a16-89ab-c0b1c494dad3"/>
+  </projects>
+  <src/>
+  <swc>
+    <linked location="sdkPlaceHolder" path="sdkPlaceHolder" position="0" uuid="389c49b1-f25b-4a16-89ab-c0b1c494dad3"/>
+    <linked location="/libs" path="\libs" position="1" uuid="389c49b1-f25b-4a16-89ab-c0b1c494dad3"/>
+  </swc>
+  <misc/>
+  <theme/>
+</fxpProperties>

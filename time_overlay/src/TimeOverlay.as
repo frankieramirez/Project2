@@ -21,12 +21,11 @@ package
 		private var _seconds:int;
 		private var _timeDisplay:TimeOverlayBase;
 		private var _dateFormat:String = "m/d/yy";
-		public var type:String = "time";
-		public var slideDuration:Number = 1;
+		private var _xmlData:XML;
 		
 		public function TimeOverlay()
 		{
-			this.fileName = "TimeOverlay2.swf";
+			
 			
 			
 		}
@@ -40,7 +39,9 @@ package
 		
 		override public function init(xmlData:XML):void {
 			
+			_xmlData = xmlData;
 			
+			_dateFormat = String(_xmlData.configuration.clock.timestamp.format);
 			
 			_timeDisplay = new TimeOverlayBase();
 			_timeDisplay.week_day.stop();

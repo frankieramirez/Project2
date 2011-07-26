@@ -1,10 +1,15 @@
 package
 {
+	import air.update.ApplicationUpdaterUI;
+	import air.update.events.UpdateEvent;
+	
 	import com.Zambie.FlashBoard.Interface.IPlugin;
 	import com.Zambie.FlashBoard.Interface.Plugin;
 	import com.Zambie.FlashBoard.UI.ConfigurationDBox;
+	import com.Zambie.FlashBoard.UI.TimeOverlay;
 	import com.jworkman.Effects.Fade;
 	
+	import flash.desktop.NativeApplication;
 	import flash.display.Bitmap;
 	import flash.display.DisplayObject;
 	import flash.display.Loader;
@@ -17,6 +22,7 @@ package
 	import flash.display.StageDisplayState;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode;
@@ -26,13 +32,15 @@ package
 	import flash.net.URLRequest;
 	import flash.system.Capabilities;
 	import flash.system.LoaderContext;
+	import flash.text.TextField;
+	import flash.text.TextFormat;
 	import flash.utils.ByteArray;
 	import flash.utils.Timer;
 	import flash.utils.getDefinitionByName;
 	
 	import mx.core.Window;
 	
-	[SWF(backgroundColor="0x000000")]
+	[SWF(width="800", height="800", backgroundColor="0x000000")]
 	
 	public class FlashBoard extends Sprite
 	{
@@ -43,16 +51,18 @@ package
 		private var _xmlData:XML;
 		private var _xmlTimer:Timer;
 		private var _xmlFileMode:String;
+		private var _theme:XML;
 		
 		//Setup/Configuration window
 		private var _setupMenu:ConfigurationDBox;
+		private var _versionStr:String;
 		
 		//Slide related variables
 		private var _defaultSlideTime:uint;
 		private var _slideTimer:Timer;
 		private var _currentSlide:int = 0;
 		private var _slideStarted:Boolean = false;
-		private var _timeOverlay:DisplayObject;
+		
 		
 		//Plugin related variables
 		private var _pluginsDir:String;
@@ -66,12 +76,12 @@ package
 		
 		//Fade & Effects settings
 		private var _fader:Fade;
-		private var _transitions:Array;
 		
 		//Window & Stage related vars
 		private var _background:Bitmap;
-		private var _regX:Number = 75;
-		private var _regY:Number = 50;
+		private var _backgroundAdded:Boolean = false;
+		private var _registrationX:Number;
+		private var _registrationY:Number;
 		private var _pluginWidth:Number;
 		private var _pluginHeight:Number;
 		private var _aspectRatio:Number;
@@ -79,29 +89,43 @@ package
 		private const PLUGIN_RATIO_X:Number = .9;
 		private const PLUGIN_RATIO_Y:Number = .85;
 		
+		//Time Overlay related vars
+		private var _timeOverlay:TimeOverlay;
+		private var _timeOverlayAdded:Boolean = false;
+		private var _alignX:String = "right";
+		private var _alignY:String = "top";
+		
 		public static const PLUGIN_LOADED:String = "plugin loaded";
 		
 		
 		public function FlashBoard()
 		{
 			
-			getScreenSize();
+			
+			
+			
+			initUpdates();
+			
+			
+			
+			
+			
 			
 			startUpUI();
+			
+			
+			
+			
+			
+			
 			
 		}
 		
 		private function getScreenSize():void {
 			
-			/*var nativeX:Number = Capabilities.screenResolutionX - stage.nativeWindow.width;
-			var nativeWindowOptions:NativeWindowInitOptions = new NativeWindowInitOptions();
-			nativeWindowOptions.systemChrome = NativeWindowSystemChrome.NONE;
-			nativeWindowOptions.maximizable = true;
-			var tmpWindow:NativeWindow = new NativeWindow(nativeWindowOptions);
-			tmpWindow.maximize();
-			tmpWindow.height = Capabilities.screenResolutionY;
-			tmpWindow.width = Capabilities.screenResolutionX;
-			trace("Native window size : " + stage.nativeWindow.width);*/
+			this.stage.scaleMode = StageScaleMode.NO_SCALE;
+			
+			this.stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
 			
 			this.stage.nativeWindow.width = Capabilities.screenResolutionX;
 			this.stage.nativeWindow.height = Capabilities.screenResolutionY;
@@ -109,8 +133,7 @@ package
 			this.stage.stageWidth = Capabilities.screenResolutionX;
 			this.stage.stageHeight = Capabilities.screenResolutionY;
 			
-			trace("Native Window : " + this.stage.nativeWindow.width + " X " + this.stage.nativeWindow.height);
-			trace("Screen : " + this.stage.stageWidth + " X " + this.stage.stageHeight);
+			
 			
 			_aspectRatio = this.stage.nativeWindow.width / this.stage.nativeWindow.height;
 			
@@ -124,7 +147,7 @@ package
 				
 			}
 			
-			trace("Aspect Ratio : " + _aspectRatioStr);
+			
 			
 		}
 		
@@ -133,19 +156,20 @@ package
 			
 		
 			
-			this.stage.scaleMode = StageScaleMode.NO_SCALE;
 			this.stage.align = StageAlign.TOP_LEFT;
-			this.stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
 			
 			
 			_fader = new Fade;
 			_setupMenu = new ConfigurationDBox();
 			_setupMenu.addEventListener(ConfigurationDBox.CONFIGURATION_COMPLETE, onConfigurationComplete);
 			this.addChild(_setupMenu);
-			_setupMenu.x = this.stage.stageWidth/2 - _setupMenu.width;
+			_setupMenu.x = this.stage.stageWidth/2 - _setupMenu.width/2;
+			
+			
 			_setupMenu.y = this.stage.stageHeight/2 - _setupMenu.height/2;
-			trace(_setupMenu.height);
+			
 			_setupMenu.initUI();
+			//_setupMenu.versionNumber = _versionStr;
 			
 		}
 		
@@ -153,28 +177,19 @@ package
 		
 		private function onConfigurationComplete(e:Event):void {
 			
-			/*_xmlFilePath = _setupMenu.filePath;
-			_xmlReloadDuration = _setupMenu.reloadDuration;
+			
+			getScreenSize();
 			
 			
-			
-			if (_xmlReloadDuration) {
-				
-				loadXML();
-				
-			} */
-			
-			
-			//This section is for rather loading a local .xml, or remote
 			_xmlFileMode = _setupMenu.getFileMode();
 			
-			trace("XMLFileMode = " , _xmlFileMode);
+			
 			
 			if (_xmlFileMode == "local" && _setupMenu.filePath) {
 				
 				_xmlFilePath = _setupMenu.filePath;
 				
-				loadXML();
+				loadLocalXML();
 				
 			} else if (_xmlFileMode == "remote") {
 				
@@ -187,15 +202,7 @@ package
 				
 			}
 			
-			if (_setupMenu.startup_checkbox.selected) {
-				
-				//TODO: Make application launch at startup
-				
-			} else {
-				
-				//TOTO: Disable application launch at startup if exists
-				
-			}
+			
 			
 			this.removeChild(_setupMenu);
 			
@@ -205,34 +212,20 @@ package
 			
 			var ul:URLLoader = new URLLoader();
 			var ur:URLRequest = new URLRequest("http://" + _xmlFilePath);
-			ul.addEventListener(Event.COMPLETE, onXMLLoaded);
+			ul.addEventListener(Event.COMPLETE, onRemoteXMLLoaded);
 			ul.load(ur);
 			
 		}
 		
-		private function onXMLLoaded(e:Event):void {
+		private function onRemoteXMLLoaded(e:Event):void {
 			
 			_xmlData = XML(e.currentTarget.data);
-			//loadBackground();
-			_defaultSlideTime = uint(_xmlData.configuration.slides.time);
-			_pluginsDir = String(_xmlData.plugins.@directory);
-			_transitions = [];
 			
-			
-			
-			_transitions["fadeIn"] = uint(_xmlData.configuration.slides.transitions.@fadeIn);
-			_transitions["fadeOut"] = uint(_xmlData.configuration.slides.transitions.@fadeOut);
-			
-			
-			if (_defaultSlideTime) {
-				
-				loadPlugins();
-				
-			}
+			configureXMLSettings();
 			
 		}
 		
-		private function loadXML():void {
+		private function loadLocalXML():void {
 			
 			var file:File = new File(_xmlFilePath);
 			var fs:FileStream = new FileStream();
@@ -241,29 +234,53 @@ package
 			fs.close();
 			_xmlData = XML(str);
 			
+			configureXMLSettings();
+			
+		}
+		
+		private function configureXMLSettings():void {
+			
+			_theme = XML(_xmlData.configuration.theme);
+			
+			if (_aspectRatioStr == "16x9") {
+				
+				_registrationX = Number(_theme.background[0].registrationX);
+				_registrationY = Number(_theme.background[0].registrationY);
+				_pluginWidth = Number(_theme.background[0].width);
+				_pluginHeight = Number(_theme.background[0].height);
+				
+			} else {
+				
+				_registrationX = Number(_theme.background[1].registrationX);
+				_registrationY = Number(_theme.background[1].registrationY);
+				_pluginWidth = Number(_theme.background[1].width);
+				_pluginHeight = Number(_theme.background[1].height);
+				
+			}
+			
+			
+			
+			
+			
 			for each(var i:XML in _xmlData.plugins.plugin) {
 				
 				_numPlugins++;
 				
 			}
-			trace(_numPlugins  + " plugins found in the config file");
 			
 			loadBackground();
 			
 			_defaultSlideTime = uint(_xmlData.configuration.slides.time);
 			
 			_pluginsDir = String(_xmlData.plugins.@directory);
-			_transitions = [];
 			
 			
-			
-			_transitions["fadeIn"] = uint(_xmlData.configuration.slides.transitions.@fadeIn);
-			_transitions["fadeOut"] = uint(_xmlData.configuration.slides.transitions.@fadeOut);
-			
-			
+				
+				
+				
 			if (_defaultSlideTime) {
 				
-				loadPlugins();
+				loadPlugin(_currentLoad);
 				
 			}
 			
@@ -274,20 +291,27 @@ package
 		
 		private function loadBackground():void {
 			
-			var ld:Loader = new Loader();
-			var ur:URLRequest = new URLRequest();
-			if (_aspectRatioStr == "16x9") {
+			
+			
+			if (String(_xmlData.configuration.theme.@active) == "on") {
 				
-				ur.url = String(_xmlData.configuration.theme.background[0].url);
+				var ld:Loader = new Loader();
+				var ur:URLRequest = new URLRequest();
+				if (_aspectRatioStr == "16x9") {
+					
+					ur.url = String(_xmlData.configuration.theme.background[0].url);
+					
+				} else {
+					
+					ur.url = String(_xmlData.configuration.theme.background[1].url);
+					
+				}
 				
-			} else {
-				
-				ur.url = String(_xmlData.configuration.theme.background[1].url);
+				ld.contentLoaderInfo.addEventListener(Event.COMPLETE, onBackgroundLoad);
+				ld.load(ur);
 				
 			}
 			
-			ld.contentLoaderInfo.addEventListener(Event.COMPLETE, onBackgroundLoad);
-			ld.load(ur);
 			
 		}
 		
@@ -304,61 +328,23 @@ package
 			
 			_background.smoothing = true;
 			
+			_backgroundAdded = true;
+			
 			
 			_background.width = stage.stageWidth;
 			_background.height = stage.stageHeight;
 			
 		}
 		
-		private function loadPlugins():void {
-			
-			
-			loadPlugin(_currentLoad);
-			
-			
-			/*for each(var pluginNode:XML in _xmlData.plugins.plugin) {
-				//var file:File = File.desktopDirectory;
-				var file:File = File.desktopDirectory.resolvePath(pluginNode.filename);
-			
-				pluginList[pluginNode.filename] = pluginNode;
-				//file.resolvePath(pluginNode.filename);
-				
-			
-				var fs:FileStream = new FileStream();
-				fs.open(file, FileMode.READ);
-				var ba:ByteArray = new ByteArray();
-			
-				fs.readBytes(ba);
-				fs.close();
-			
-				var loaderContext:LoaderContext = new LoaderContext();
-				loaderContext.allowLoadBytesCodeExecution = true;
-			
-				var l:Loader = new Loader();
-				l.loadBytes(ba,loaderContext);
-				l.contentLoaderInfo.addEventListener(Event.COMPLETE, onPluginLoadComplete);
-				_numPlugins++;
-			}
-			
-			
-			
-			this.addEventListener(Event.ENTER_FRAME, checkLoad);
-			
-			*/
-			
-		}
+		
 		
 		private function loadPlugin(loadNum:int):void {
-			//trace("LoadPlugin #" , loadNum);
-			//trace(_xmlData.plugins.plugin[loadNum].filepath);
-			//var file:File = File.desktopDirectory.resolvePath(
-			var file:File = new File(_xmlData.plugins.plugin[loadNum].filepath);
-			//file.resolvePath(_xmlData.plugins.plugin[loadNum].filepath);
+			
+			var file:File = new File(String(_pluginsDir + _xmlData.plugins.plugin[loadNum].filename));
+			
 			
 			_pluginList[_xmlData.plugins.plugin[loadNum].filename] = _xmlData.plugins.plugin[loadNum];
-			//file.resolvePath(pluginNode.filename);
 			
-			//trace("FILE PATH:",file.nativePath);
 			var fs:FileStream = new FileStream();
 			fs.open(file, FileMode.READ);
 			var ba:ByteArray = new ByteArray();
@@ -379,10 +365,17 @@ package
 		private function onPluginLoadComplete(e:Event):void {
 			var p:Plugin = e.currentTarget.content as Plugin;
 			
-			//p.duration = uint(_defaultSlideTime);
 			
 			
 			var pXML:XML = XML(_pluginList[p.fileName].data);
+			
+			
+			
+			
+			
+			
+			
+			p.init(pXML);
 			
 			
 			
@@ -390,29 +383,23 @@ package
 				
 				p.duration = _defaultSlideTime;
 				
-			}
+			} 
 			
-			trace("plugin duration of " + p.duration + " While default duration = " + _defaultSlideTime);
-			
-			p.init(pXML);
+			trace("this plugin duration is : " + p.duration);
 			
 			
 			
+			p.x = _registrationX;
+			p.y = _registrationY;
 			
 			
-			p.x = _regX;
-			p.y = _regY;
-			
-			//trace("Width of Plugin" + p.width);
 			
 			_plugins.push(p);
 			
 			
 			onPluginLoaded();
 			
-			//addChild(p);
 			
-			//trace("NumChildren : " , this.numChildren);
 		}
 		
 		private function onPluginLoaded():void {
@@ -423,7 +410,7 @@ package
 				startSlideShow();
 				
 			}
-			//trace("1");
+			
 			if (_currentLoad < _numPlugins - 1) {
 				
 				_currentLoad++;
@@ -446,15 +433,15 @@ package
 			
 			_plugins[_currentSlide].alpha = 1;
 			
-			/*if (this.contains(_timeOverlay) && this.contains(_background)) {
+			if (_backgroundAdded && _timeOverlayAdded) {
 				
 				this.addChildAt(_plugins[_currentSlide], 1);
 				
-			} else if(this.contains(_background)) {
+			} else if (_backgroundAdded && !_timeOverlayAdded) {
 				
-				this.addChildAt(_plugins[_currentSlide], 1);
+				this.addChild(_plugins[_currentSlide]);
 				
-			} else if (this.contains(_timeOverlay)) {
+			} else if (!_backgroundAdded && _timeOverlayAdded) {
 				
 				this.addChildAt(_plugins[_currentSlide], 0);
 				
@@ -462,13 +449,20 @@ package
 				
 				this.addChild(_plugins[_currentSlide]);
 				
-			}*/
+			}
 			
-			this.addChild(_plugins[_currentSlide]);
+			_plugins[_currentSlide].x = _registrationX;
+			_plugins[_currentSlide].y = _registrationY;
+			
+			if (String(_xmlData.configuration.clock.@active) == "on") {
+				
+				initTimeOverlay(_xmlData);
+				
+			}
 			
 			
-			_plugins[_currentSlide].width = PLUGIN_RATIO_X * this.stage.stageWidth;
-			_plugins[_currentSlide].height = PLUGIN_RATIO_Y * this.stage.stageHeight;
+			
+			
 			
 			
 			
@@ -500,19 +494,55 @@ package
 			}
 			
 			
-			this.addChild(_plugins[_currentSlide]);
-			_plugins[_currentSlide].width = PLUGIN_RATIO_X * this.stage.stageWidth;
-			_plugins[_currentSlide].height = PLUGIN_RATIO_Y * this.stage.stageHeight;
 			
-			//trace("Slide #" + _currentSlide + " has a duration of " + _plugins[_currentSlide].duration);
+			
+			if (_backgroundAdded && _timeOverlayAdded) {
+				
+				this.addChildAt(_plugins[_currentSlide], 1);
+				
+			} else if (_backgroundAdded && !_timeOverlayAdded) {
+				
+				this.addChild(_plugins[_currentSlide]);
+				
+			} else if (!_backgroundAdded && _timeOverlayAdded) {
+				
+				this.addChildAt(_plugins[_currentSlide], 0);
+				
+			} else {
+				
+				this.addChild(_plugins[_currentSlide]);
+				
+			}
+			
+			_plugins[_currentSlide].x = _registrationX;
+			_plugins[_currentSlide].y = _registrationY;
+			
+			
+			if (_aspectRatioStr == "16x9") {
+				var p:Number = stage.stageWidth/1600;
+				var p2:Number = stage.stageHeight/900;
+				_plugins[_currentSlide].width = p * _pluginWidth;
+				_plugins[_currentSlide].height = p2 * _pluginHeight;
+			} else if (_aspectRatioStr == "4x3") {
+				var p3:Number = stage.stageWidth/1200;
+				var p4:Number = stage.stageHeight/900;
+				_plugins[_currentSlide].width = p3 * _pluginWidth;
+				_plugins[_currentSlide].height = p4 * _pluginHeight;
+			}
+			
+			
+			
 			
 			_slideTimer.delay = Number(_plugins[_currentSlide].duration * 1000);
+			
+			
+			
 			_slideTimer.start();
 			
 		}
 		
 		private function onSlideDone(e:TimerEvent):void {
-			//trace("slide Done");
+			
 			_slideTimer.reset();
 			
 			
@@ -521,114 +551,85 @@ package
 			
 		}
 		
-		/*
-		private function checkLoad(e:Event):void {
+		private function initTimeOverlay(xmlData:XML):void {
 			
-			if (_plugins.length >= _numPlugins) {
-				trace(_plugins.length);
-				this.removeEventListener(Event.ENTER_FRAME, checkLoad);
-				initSlideShow();
-			} 
+			_timeOverlay = new TimeOverlay();
 			
-		}*/
+			_timeOverlay.init(xmlData);
+			
+			this.addChild(_timeOverlay);
+			_timeOverlayAdded = true;
+			
+			_timeOverlay.alpha = Number(xmlData.configuration.clock.opacity / 100);
+			
+			_alignX = String(xmlData.configuration.clock.registrationX);
+			
+			_alignY = String(xmlData.configuration.clock.registrationY);
+			
+			_timeOverlay.x = Number(xmlData.configuration.clock.registrationX);
+			
+			_timeOverlay.y = Number(xmlData.configuration.clock.registrationY);
+			
+			
+			
+			
+			
+		}
 		
-		/*
+		private function initUpdates():void {
+			
+			var ul:URLLoader = new URLLoader();
+			var ur:URLRequest = new URLRequest("http://jworkman.no-ip.org/flashboard/updates/latestVersion.xml");
+			ul.addEventListener(Event.COMPLETE, onUpdateXMLLoad);
+			ul.load(ur);
+			
+		}
 		
-		private function onPluginLoadComplete(e:Event):void {
+		private function onUpdateXMLLoad(e:Event):void {
+			trace("yup");
+			var xmlData:XML = XML(e.currentTarget.data);
+			var na:NativeApplication = NativeApplication.nativeApplication;
+			var ns:Namespace = new Namespace(null,"http://ns.adobe.com/air/application/1.5.3");
+			_versionStr = String("Version " + na.applicationDescriptor.ns::version);
 			
-			var plugin:Plugin = e.currentTarget.content as Plugin;
-			
-			_plugins.push(plugin);
-			
-			
-			
-			var pluginXML:XML = XML(pluginList[plugin.fileName].data);
-			
-			//trace(plugin.alpha);
-			
-			plugin.init(pluginXML);
-			
-			if (String(XML(pluginList[plugin.fileName].duration)) == "") {
+			if (Number(xmlData.latestVersion) > Number(na.applicationDescriptor.ns::version)) {
 				
-				plugin.duration = _defaultSlideTime;
+				var textFormat:TextFormat = new TextFormat("Helvetica", 20, 0x0080ec);
+				
+				_setupMenu.mc_version.tf_version.defaultTextFormat = textFormat;
+				
+				_setupMenu.mc_version.tf_version.text = "New updates Available!";
+				_setupMenu.mc_version.mouseChildren = false;
+				_setupMenu.mc_version.buttonMode = true;
+				
+				_setupMenu.mc_version.addEventListener(MouseEvent.CLICK, startUpdateUI);
 				
 			} else {
 				
-				plugin.duration = uint(XML(pluginList[plugin.fileName].duration));
-				
-			}
-			
-			if (String(pluginList[plugin.fileName].transition.@fadeIn) != "" && String(pluginList[plugin.fileName].transition.@fadeOut) != "") {
-				
-				var tmpTrans:Array = [];
-				tmpTrans['fadeIn'] = uint(pluginList[plugin.fileName].transition.@fadeIn);
-				tmpTrans['fadeOut'] = uint(pluginList[plugin.fileName].transition.@fadeOut);
-				
-				trace(tmpTrans);
-				
-				plugin.transitions = tmpTrans;
-				
-			} else {
-				
-				plugin.transitions = _transitions;
+				_setupMenu.versionNumber = _versionStr;
 				
 			}
 			
 			
 			
-			addChild(plugin);
-			//plugin.x = this.stage.stageWidth/2;
-			//plugin.y = this.stage.stageHeight/2;
-			
-			
-			
-			
-		}*/
+		}
 		
-		/*
+		private function startUpdateUI(e:MouseEvent):void {
+			
+			
+			var updater:ApplicationUpdaterUI = new ApplicationUpdaterUI();
+			updater.delay = 1; 
+			updater.updateURL = "http://jworkman.no-ip.org/flashboard/updates/update.xml";
+			updater.initialize();
+			updater.addEventListener(UpdateEvent.INITIALIZED, onUpdateStart);
+			
+		}
 		
-		private function initSlideShow():void {
+		private function onUpdateStart(e:UpdateEvent):void {
 			
+			e.currentTarget.checkNow();
 			
-			for each(var plugin:Plugin in _plugins) {
-				
-				plugin.addEventListener(Plugin.TIME_DONE, onSlideDone);
-				
-			}
-			
-			_plugins[_currentSlide].alpha = 1;
-			_plugins[_currentSlide].connect();
-			
-			
-			
-		}*/
-		
-		/*
-		
-		private function onSlideDone(e:Event):void {
-			
-			_plugins[_currentSlide].disconnect();
-			
-			
-			if (_currentSlide >= _plugins.length - 1) {
-				
-				_currentSlide = 0;
-				
-			} else {
-				
-				_currentSlide++;
-				
-			}
-			
-			_plugins[_currentSlide].connect();
-			
-		}*/
-		
-		
-		
-		
-		
-		
+		}
 		
 		
 	}

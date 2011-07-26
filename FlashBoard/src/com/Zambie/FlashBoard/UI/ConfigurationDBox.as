@@ -2,6 +2,7 @@ package com.Zambie.FlashBoard.UI
 {
 	import com.Zambie.FlashBoard.VO.RunTimeSettingsVO;
 	
+	import flash.desktop.NativeApplication;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
@@ -19,6 +20,7 @@ package com.Zambie.FlashBoard.UI
 		
 		public var filePath:String;
 		public var reloadDuration:uint;
+		private var _versionNumber:String;
 		public static const CONFIGURATION_COMPLETE:String = "configuration complete";
 		public static const SAVE_CONFIGURATION:String = "save config";
 		
@@ -31,17 +33,30 @@ package com.Zambie.FlashBoard.UI
 			
 		}
 		
+		public function set versionNumber(value:String):void
+		{
+			_versionNumber = value;
+			this.mc_version.tf_version.text = _versionNumber;
+		}
+
 		private function loadPrevSettings():void {
 			
 			var so:SharedObject = SharedObject.getLocal("startSettings");
 			if (so.data.startupSettings) {
 				
 				filePath = so.data.startupSettings.filePath;
-				if (so.data.startupSettings.fileMode == "remote") {
+				
+				if (so.data.startupSettings.fileMode == "local") {
+					
+					this.local_urltxt.text = filePath;
+					
+				} else {
 					
 					this.web_address.text = filePath;
 					
 				}
+				
+				
 				
 				if (so.data.startupSettings.startUp) {
 					
@@ -52,6 +67,16 @@ package com.Zambie.FlashBoard.UI
 				if (so.data.startupSettings.reloadDuration >= 1) {
 					
 					this.update_time_input.text = so.data.startupSettings.reloadDuration;
+					
+				}
+				
+				if (so.data.startupSettings.saveSettings == true) {
+					
+					this.save_btn.selected = true;
+					
+				} else {
+					
+					this.save_btn.selected = false;
 					
 				}
 				
@@ -80,6 +105,14 @@ package com.Zambie.FlashBoard.UI
 			
 			this.save_btn.addEventListener(MouseEvent.CLICK, onSaveClick);
 			
+			this.startup_checkbox.addEventListener(MouseEvent.CLICK, onStartupCheck);
+			
+		}
+		
+		private function onStartupCheck(e:MouseEvent):void {
+			
+			
+			
 		}
 		
 		
@@ -96,11 +129,16 @@ package com.Zambie.FlashBoard.UI
 		private function onFileSelect(e:Event):void {
 			
 			filePath = String(e.currentTarget.nativePath);
-			this.web_address.text = "http://";
+			this.local_urltxt.text = filePath;
+			trace("local file path : " + this.local_urltxt.text);
+			this.web_address.text = "";
 			
 		}
 		
 		private function onStart(e:MouseEvent):void {
+			
+			this.onSaveClick(new MouseEvent(MouseEvent.CLICK));
+			
 			if (filePath != "") {
 				
 				reloadDuration = uint(this.update_time_input.text);
@@ -113,7 +151,7 @@ package com.Zambie.FlashBoard.UI
 		
 		public function getFileMode():String {
 			
-			if (this.web_address.text == "http://" || this.web_address.text == "") {
+			if (this.web_address.text == "" && this.local_urltxt.text != "") {
 				
 				return "local";
 				
@@ -143,37 +181,58 @@ package com.Zambie.FlashBoard.UI
 		}
 		
 		private function onSaveClick(e:MouseEvent):void {
-			
-			var settingsVo:RunTimeSettingsVO = new RunTimeSettingsVO();
-			settingsVo.fileMode = this.getFileMode();
-			settingsVo.reloadDuration = uint(this.update_time_input.text);
-			
-			if (this.getFileMode() == "local") {
-				
-				settingsVo.filePath = filePath;
-				
-			} else {
-				
-				settingsVo.filePath = this.web_address.text;
-				
-			}
-			
-			if (this.startup_checkbox.selected) {
-				
-				settingsVo.startUp = true;
-				
-			} else {
-				
-				settingsVo.startUp = false;
-				
-			}
-			
-			
-			
 			var so:SharedObject = SharedObject.getLocal("startSettings");
-			so.clear();
-			so.data.startupSettings = settingsVo;
+			if (this.save_btn.selected) {
+				
+				var settingsVo:RunTimeSettingsVO = new RunTimeSettingsVO();
+				settingsVo.fileMode = this.getFileMode();
+				settingsVo.reloadDuration = uint(this.update_time_input.text);
 			
+				if (this.getFileMode() == "local") {
+				
+					settingsVo.filePath = filePath;
+					settingsVo.fileMode = "local";
+				
+				} else {
+				
+					settingsVo.filePath = this.web_address.text;
+					settingsVo.fileMode = "remote";
+				}
+				
+				if (this.save_btn.selected) {
+					
+					settingsVo.saveSettings = true;
+					
+				} else {
+					
+					settingsVo.saveSettings = false;
+					
+				}
+			
+				if (this.startup_checkbox.selected) {
+					trace("startup application");
+					settingsVo.startUp = true;
+				
+					NativeApplication.nativeApplication.startAtLogin = true;
+				
+				} else {
+				
+					settingsVo.startUp = false;
+					NativeApplication.nativeApplication.startAtLogin = false;
+				
+				}
+			
+			
+			
+				
+				so.clear();
+				so.data.startupSettings = settingsVo;
+				
+			} else {
+				
+				so.clear();
+				
+			}
 			
 		}
 		

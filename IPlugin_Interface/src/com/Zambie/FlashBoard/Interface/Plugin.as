@@ -13,17 +13,13 @@ package com.Zambie.FlashBoard.Interface
 	{
 		
 		private var _duration:uint;
-		private var _fader:Fade; 
+		private var _fader:Fade;
 		private var _timer:Timer;
-		private var _transitions:Array;
 		public static const TIME_DONE:String = "Time over";
 		
 		private var _fileName:String;
 		
-		public function set transitions(value:Array):void
-		{
-			_transitions = value;
-		}
+		
 
 		public function set duration(value:uint):void
 		{
@@ -55,13 +51,7 @@ package com.Zambie.FlashBoard.Interface
 		
 		
 		
-		/*private function onTimeUp(e:TimerEvent):void {
-			
-			_timer.stop();
-			var evt:Event = new Event(TIME_DONE);
-			this.dispatchEvent(evt);
-			
-		}*/
+		
 		
 		
 		
